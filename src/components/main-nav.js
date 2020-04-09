@@ -6,13 +6,13 @@ const createNavItem = (name, count) => {
 
 export const createMainMenuTemplate = (filters) => {
 
-  const navItem = filters.map((it) => createNavItem(it.name, it.count)).join(`\n`);
+  const navItems = filters.map((it) => createNavItem(it.name, it.count)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
           <div class="main-navigation__items">
             <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-            ${navItem}
+            ${navItems}
           </div>
           <a href="#stats" class="main-navigation__additional">Stats</a>
         </nav>`

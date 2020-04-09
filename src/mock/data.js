@@ -48,10 +48,10 @@ const authors = [
 ];
 
 const smiles = [
-  `./images/emoji/smile.png`,
-  `./images/emoji/angry.png`,
-  `./images/emoji/puke.png`,
-  `./images/emoji/sleeping.png`,
+  `smile`,
+  `angry`,
+  `puke`,
+  `sleeping`,
 ];
 
 const commentTexts = [
@@ -62,4 +62,65 @@ const commentTexts = [
   `Eiusmod anim veniam enim ullamco laborum elit ullamco.`,
   `Voluptate exercitation ut nostrud laborum ipsum ad deserunt irure ea.Nulla commodo ad est amet excepteur exercitation velit nisi sint qui.`,
 ];
-export {titles, genres, urls, descriptions, authors, smiles, commentTexts};
+
+const ages = [
+  `0+`,
+  `3+`,
+  `6+`,
+  `9+`,
+  `12+`,
+  `16+`,
+  `18+`,
+];
+
+const directors = [
+  `Gai Richi`,
+  `Vuddi Allen`,
+  `Ridley Scott`,
+  `Tim Berton`,
+  `Clint Eastwood`,
+  `Christofer Nolan`,
+  `Quentin Tarantino`,
+];
+
+const actors = [
+  `Vuddi Allen, Fransice Ford Coppola`,
+  `Charly Kaufman, Joel Koen`,
+  `Robert Town`,
+  `Billy Wilder, James Kameron`,
+  `Oliver Stone, Charly Kaufman`,
+];
+
+const writers = [
+  `Bred Pit, Tom Cruse, Jonny Depp`,
+  `Tom Cruse, Keanoo Reavse, Tom Hanks`,
+  `Jonny Depp, Jackie Chan`,
+  `Tom Hanks, Jonny Depp`,
+  `Keanoo Reavse, Jonny Depp`,
+  `Jackie Chan, Bred Pit, Tom Hanks`,
+  `Quentin Tarantino, Jackie Chan, Keanoo Reavse`,
+];
+
+const releases = [
+  `8 Sept`,
+  `31 Aug`,
+  `1 Feb`,
+  `19 June`,
+  `30 Dec`,
+  `7 June`,
+  `25 May`,
+];
+
+const countries = [
+  `USA`,
+  `UK`,
+  `France`,
+  `Russia`,
+  `Germany`,
+  `Italy`,
+  `Austria`,
+];
+
+export {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries};
+
+// , , , , , , , , , director, writers, actors, release, country

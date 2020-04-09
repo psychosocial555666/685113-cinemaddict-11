@@ -6,7 +6,7 @@ import {createFilmCardTemplate} from "./components/film-card";
 import {createShowMoreTemplate} from "./components/show-more";
 import {generateFilters} from "./mock/filter";
 import {generateFilms} from "./mock/film";
-// import {createPopupTemplate} from "./components/popup";
+import {createPopupTemplate} from "./components/popup";
 
 const CARDS_COUNT = 22;
 const CARDS_EXTRA_COUNT = 2;
@@ -18,7 +18,7 @@ const render = (container, template, place = `beforeend`) => {
 };
 const filters = generateFilters();
 
-// const bodyContainer = document.querySelector(`body`);
+const bodyContainer = document.querySelector(`body`);
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 
@@ -36,19 +36,22 @@ const filmsListCommentedContaner = filmsListExtra[1].querySelector(`.films-list_
 let currentFilmsCount = SHOWING_CARDS_ON_START;
 
 const films = generateFilms(CARDS_COUNT);
-const ratedfilms = generateFilms(CARDS_EXTRA_COUNT);
-const commentedfilms = generateFilms(CARDS_EXTRA_COUNT);
+const mostRatedFilms = films.slice(0, films.length).sort((a, b) => (b.rating - a.rating)).slice(0, CARDS_EXTRA_COUNT);
+const mostCommentedFilms = films.slice(0, films.length).sort((a, b) => (b.comments.length - a.comments.length)).slice(0, CARDS_EXTRA_COUNT);
 
-films.slice(0, currentFilmsCount).forEach((film) => (render(filmsListContaner, createFilmCardTemplate(film))));
+films.slice(0, currentFilmsCount).forEach((film, i) => {
+  (render(filmsListContaner, createFilmCardTemplate(film, i)));
+});
 
 render(filmsList, createShowMoreTemplate());
 
-for (let j = 0; j < ratedfilms.length; j++) {
-  render(filmsListRatedContaner, createFilmCardTemplate(ratedfilms[j]));
-}
-for (let k = 0; k < commentedfilms.length; k++) {
-  render(filmsListCommentedContaner, createFilmCardTemplate(commentedfilms[k]));
-}
+mostRatedFilms.forEach((film, i) => {
+  (render(filmsListRatedContaner, createFilmCardTemplate(film, i)));
+});
+
+mostCommentedFilms.forEach((film, i) => {
+  (render(filmsListCommentedContaner, createFilmCardTemplate(film, i)));
+});
 
 const showMoreButton = filmsList.querySelector(`.films-list__show-more`);
 
@@ -56,11 +59,36 @@ showMoreButton.addEventListener(`click`, () => {
   const prevFilmsCount = currentFilmsCount;
   currentFilmsCount = currentFilmsCount + SHOWING_CARDS_ON_BUTTON_CLICK;
 
-  films.slice(prevFilmsCount, currentFilmsCount).forEach((film) => (render(filmsListContaner, createFilmCardTemplate(film))));
+  films.slice(prevFilmsCount, currentFilmsCount).forEach((film, i) => (render(filmsListContaner, createFilmCardTemplate(film, i + currentFilmsCount - SHOWING_CARDS_ON_START))));
+
+  const filmCards = filmsListContaner.querySelectorAll(`.film-card__poster`);
+
+  openDetailsPopup(filmCards, films);
 
   if (currentFilmsCount >= films.length) {
     showMoreButton.remove();
   }
 });
-// render(bodyContainer, createPopupTemplate());
+
+const filmCards = filmsListContaner.querySelectorAll(`.film-card__poster`);
+const ratedFilmCards = filmsListRatedContaner.querySelectorAll(`.film-card__poster`);
+const commentedFilmCards = filmsListCommentedContaner.querySelectorAll(`.film-card__poster`);
+
+const openDetailsPopup = (list, array) => {
+  list.forEach((card) => {
+    card.addEventListener(`click`, (evt) => {
+      render(bodyContainer, createPopupTemplate(array[evt.target.id]));
+
+      const popup = document.querySelector(`.film-details`);
+      const closeButton = popup.querySelector(`.film-details__close-btn`);
+
+      closeButton.addEventListener(`click`, () => popup.remove());
+    });
+  });
+};
+
+openDetailsPopup(filmCards, films);
+openDetailsPopup(ratedFilmCards, mostRatedFilms);
+openDetailsPopup(commentedFilmCards, mostCommentedFilms);
+
 
