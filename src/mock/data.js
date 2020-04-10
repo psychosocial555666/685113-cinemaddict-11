@@ -1,3 +1,4 @@
+
 const titles = [
   `The Dance of Life`,
   `Sagebrush Trail`,
@@ -121,6 +122,21 @@ const countries = [
   `Austria`,
 ];
 
-export {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries};
+const users = [
+  {
+    rating: `Novice`,
+    avatar: `images/bitmap@2x.png`
+  },
+  {
+    rating: `Fan`,
+    avatar: `images/bitmap@3x.png`
+  },
+  {
+    rating: `Movie Buff`,
+    avatar: `images/bitmap.png`
+  },
+];
+
+export {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries, users};
 
 // , , , , , , , , , director, writers, actors, release, country

@@ -36,7 +36,7 @@ const generateComment = () => {
 
 const generateComments = () => {
   return (
-    new Array(getRandomNumber(0, 10))
+    new Array(getRandomNumber(0, 51))
     .fill(``)
     .map(generateComment)
   );
@@ -70,4 +70,4 @@ const generateFilms = (count) => {
     .map(generateFilm)
   );
 };
-export {generateFilms, generateFilm};
+export {generateFilms, generateFilm, getRandomArrayItem};

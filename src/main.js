@@ -5,10 +5,12 @@ import {createFilmsTemplate} from "./components/films";
 import {createFilmCardTemplate} from "./components/film-card";
 import {createShowMoreTemplate} from "./components/show-more";
 import {generateFilters} from "./mock/filter";
-import {generateFilms} from "./mock/film";
+import {generateFilms, getRandomArrayItem} from "./mock/film";
 import {createPopupTemplate} from "./components/popup";
+import {users} from "./mock/data";
+import {createStatisticsTemplate} from "./components/statistics";
 
-const CARDS_COUNT = 22;
+const CARDS_COUNT = 50;
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
 const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
@@ -22,7 +24,7 @@ const bodyContainer = document.querySelector(`body`);
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 
-render(headerContainer, createProfileRateTemplate());
+render(headerContainer, createProfileRateTemplate(getRandomArrayItem(users)));
 render(mainContainer, createMainMenuTemplate(filters));
 render(mainContainer, createSortTemplate());
 render(mainContainer, createFilmsTemplate());
@@ -91,4 +93,8 @@ openDetailsPopup(filmCards, films);
 openDetailsPopup(ratedFilmCards, mostRatedFilms);
 openDetailsPopup(commentedFilmCards, mostCommentedFilms);
 
+const pageFooterContainer = document.querySelector(`.footer`);
+const footerStaticticsContainer = pageFooterContainer.querySelector(`.footer__statistics`);
+
+render(footerStaticticsContainer, createStatisticsTemplate(CARDS_COUNT));
 
