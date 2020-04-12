@@ -1,4 +1,6 @@
 
+import {getArrayFromText} from "./../utils";
+
 const titles = [
   `The Dance of Life`,
   `Sagebrush Trail`,
@@ -16,6 +18,11 @@ const genres = [
   `Drama`,
   `Comedy`,
   `Cartoon`,
+  `Romance comedy`,
+  `Sci-fi`,
+  `Horror`,
+  `Documentary`,
+  `Adventure`,
 ];
 
 const urls = [
@@ -28,15 +35,10 @@ const urls = [
   `./images/posters/made-for-each-other.png`,
 ];
 
-const descriptions = [
-  `Sint officia ea culpa occaecat.`,
-  `Ea fugiat velit nulla sit ut cillum.Cillum anim ea officia occaecat tempor consectetur.`,
-  `Exercitation laborum enim ipsum voluptate ex exercitation anim non magna irure deserunt aute labore.`,
-  `Dolore dolor magna officia qui proident.`,
-  `Minim excepteur magna ad proident duis voluptate.Fugiat ut anim sunt qui labore cillum est cupidatat deserunt.`,
-  `Anim nostrud anim tempor voluptate pariatur consequat nulla officia aliqua sint elit nostrud id commodo.`,
-  `Aliquip occaecat enim minim labore.`,
-];
+const descriptionText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
+
+const descriptions = getArrayFromText(descriptionText);
+
 
 const authors = [
   `Jim Root`,
@@ -122,21 +124,6 @@ const countries = [
   `Austria`,
 ];
 
-const users = [
-  {
-    rating: `Novice`,
-    avatar: `images/bitmap@2x.png`
-  },
-  {
-    rating: `Fan`,
-    avatar: `images/bitmap@3x.png`
-  },
-  {
-    rating: `Movie Buff`,
-    avatar: `images/bitmap.png`
-  },
-];
 
-export {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries, users};
+export {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries};
 
-// , , , , , , , , , director, writers, actors, release, country

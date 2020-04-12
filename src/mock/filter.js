@@ -1,15 +1,20 @@
-const filterNames = [
-  `Watchlist`, `History`, `Favorites`
-];
+const generateFilters = (array) => {
 
-const generateFilters = () => {
   return (
-    filterNames.map((it)=> {
-      return {
-        name: it,
-        count: Math.floor(Math.random() * 10),
-      };
-    })
+    [
+      {
+        name: `Watchlist`,
+        count: array.filter((it)=> it.isInWatchlist).length,
+      },
+      {
+        name: `History`,
+        count: array.filter((it)=> it.isInHistory).length,
+      },
+      {
+        name: `Favorites`,
+        count: array.filter((it)=> it.isInFavorites).length,
+      },
+    ]
   );
 };
 export {generateFilters};

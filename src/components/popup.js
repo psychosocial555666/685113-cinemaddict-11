@@ -1,3 +1,5 @@
+import {transformTimeFormat} from "../utils";
+
 const createCommentItem = (smile, author, text, date) => {
   return (
     `<li class="film-details__comment">
@@ -67,7 +69,7 @@ export const createPopupTemplate = (film) => {
                     </tr>
                     <tr class="film-details__row">
                       <td class="film-details__term">Runtime</td>
-                      <td class="film-details__cell">${duration}</td>
+                      <td class="film-details__cell">${transformTimeFormat(duration)}</td>
                     </tr>
                     <tr class="film-details__row">
                       <td class="film-details__term">Country</td>
@@ -76,9 +78,9 @@ export const createPopupTemplate = (film) => {
                     <tr class="film-details__row">
                       <td class="film-details__term">Genres</td>
                       <td class="film-details__cell">
-                        <span class="film-details__genre">${genre}</span>
-                        <span class="film-details__genre">${genre}</span>
-                        <span class="film-details__genre">${genre}</span></td>
+                        <span class="film-details__genre">${genre[0]}</span>
+                        <span class="film-details__genre">${genre[1]}</span>
+                        <span class="film-details__genre">${genre[2]}</span></td>
                     </tr>
                   </table>
         

@@ -1,29 +1,5 @@
 import {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries} from "./data";
-
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * getRandomNumber(0, 8);
-
-  targetDate.setDate(targetDate.getDate() + diffValue);
-
-  return targetDate;
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
-const getRandomNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
-const getRandomFractionalNumber = (min, max) => {
-  let number = min + (Math.random() * (max - min));
-  return number.toFixed(1);
-};
+import {getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr} from "../utils";
 
 const generateComment = () => {
   return {
@@ -36,7 +12,7 @@ const generateComment = () => {
 
 const generateComments = () => {
   return (
-    new Array(getRandomNumber(0, 51))
+    new Array(getRandomNumber(0, 5))
     .fill(``)
     .map(generateComment)
   );
@@ -46,12 +22,12 @@ const generateFilm = () => {
   return (
     {
       title: getRandomArrayItem(titles),
-      rating: `${getRandomFractionalNumber(0, 9)}`,
+      rating: `${getRandomFractionalNumber(3, 9)}`,
       year: ` ${getRandomNumber(1920, 2020)}`,
-      duration: ` ${getRandomNumber(1, 2)}h  ${getRandomNumber(1, 59)}m`,
-      genre: getRandomArrayItem(genres),
+      duration: getRandomNumber(60, 180),
+      genre: makeRandomArr(genres).slice(0, 3),
       url: getRandomArrayItem(urls),
-      description: getRandomArrayItem(descriptions),
+      description: makeRandomArr(descriptions).slice(0, getRandomNumber(1, 5)),
       comments: generateComments(),
       age: getRandomArrayItem(ages),
       actors: getRandomArrayItem(actors),
@@ -59,6 +35,9 @@ const generateFilm = () => {
       director: getRandomArrayItem(directors),
       release: getRandomArrayItem(releases),
       country: getRandomArrayItem(countries),
+      isInWatchlist: Math.random() > 0.5,
+      isInHistory: Math.random() > 0.5,
+      isInFavorites: Math.random() > 0.5,
     }
   );
 };
@@ -70,4 +49,4 @@ const generateFilms = (count) => {
     .map(generateFilm)
   );
 };
-export {generateFilms, generateFilm, getRandomArrayItem};
+export {generateFilms, getRandomArrayItem};

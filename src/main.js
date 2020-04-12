@@ -5,12 +5,13 @@ import {createFilmsTemplate} from "./components/films";
 import {createFilmCardTemplate} from "./components/film-card";
 import {createShowMoreTemplate} from "./components/show-more";
 import {generateFilters} from "./mock/filter";
-import {generateFilms, getRandomArrayItem} from "./mock/film";
+import {generateFilms} from "./mock/film";
 import {createPopupTemplate} from "./components/popup";
-import {users} from "./mock/data";
 import {createStatisticsTemplate} from "./components/statistics";
+import {generateStatistics} from "./mock/statistics";
 
-const CARDS_COUNT = 50;
+
+const CARDS_COUNT = 21;
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
 const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
@@ -18,13 +19,15 @@ const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
-const filters = generateFilters();
+const films = generateFilms(CARDS_COUNT);
+const filters = generateFilters(films);
+const statistics = generateStatistics(films);
 
 const bodyContainer = document.querySelector(`body`);
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 
-render(headerContainer, createProfileRateTemplate(getRandomArrayItem(users)));
+render(headerContainer, createProfileRateTemplate(statistics));
 render(mainContainer, createMainMenuTemplate(filters));
 render(mainContainer, createSortTemplate());
 render(mainContainer, createFilmsTemplate());
@@ -37,7 +40,6 @@ const filmsListCommentedContaner = filmsListExtra[1].querySelector(`.films-list_
 
 let currentFilmsCount = SHOWING_CARDS_ON_START;
 
-const films = generateFilms(CARDS_COUNT);
 const mostRatedFilms = films.slice(0, films.length).sort((a, b) => (b.rating - a.rating)).slice(0, CARDS_EXTRA_COUNT);
 const mostCommentedFilms = films.slice(0, films.length).sort((a, b) => (b.comments.length - a.comments.length)).slice(0, CARDS_EXTRA_COUNT);
 
@@ -96,5 +98,7 @@ openDetailsPopup(commentedFilmCards, mostCommentedFilms);
 const pageFooterContainer = document.querySelector(`.footer`);
 const footerStaticticsContainer = pageFooterContainer.querySelector(`.footer__statistics`);
 
-render(footerStaticticsContainer, createStatisticsTemplate(CARDS_COUNT));
+render(footerStaticticsContainer, createStatisticsTemplate(films.length));
+
+export {films};
 
