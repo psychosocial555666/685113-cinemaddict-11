@@ -42,22 +42,36 @@ const getArrayFromText = (array) => {
 };
 
 const getFavoriteGenre = (arr) => {
-  let genreItem = arr[0];
-  let maxRepeatNumber = 1;
-  for (let i = 0; i < arr.length; i++) {
-    let repeatNumber = 0;
-    for (let j = 0; j - arr.length - 1; j++) {
-      if (arr[i] === arr[j]) {
-        repeatNumber += 1;
-      }
-    }
-    if (repeatNumber > maxRepeatNumber) {
-      maxRepeatNumber = repeatNumber;
-      genreItem = arr[i];
-    }
-  }
-  return genreItem;
+  let genres = arr
+    .filter((movie) => movie.isInFavorites)
+    .map(({genre}) => genre)
+    .flat()
+    .reduce((obj, genre) => {
+      obj[genre] = obj[genre] ? ++obj[genre] : 1;
+      return obj;
+    }, {});
+  const arrGenres = Object.entries(genres).sort((a, b) => b[1] - a[1]);
+  const maxGenre = arrGenres[0][1];
+  return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
 };
+
+// const getFavoriteGenre = (arr) => {
+//   let genreItem = arr[0];
+//   let maxRepeatNumber = 1;
+//   for (let i = 0; i < arr.length; i++) {
+//     let repeatNumber = 0;
+//     for (let j = 0; j - arr.length - 1; j++) {
+//       if (arr[i] === arr[j]) {
+//         repeatNumber += 1;
+//       }
+//     }
+//     if (repeatNumber > maxRepeatNumber) {
+//       maxRepeatNumber = repeatNumber;
+//       genreItem = arr[i];
+//     }
+//   }
+//   return genreItem;
+// };
 
 const getUserRating = (arr) => {
   const watchedMoviesQuantity = arr.length;

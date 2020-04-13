@@ -18,7 +18,7 @@ const genres = [
   `Drama`,
   `Comedy`,
   `Cartoon`,
-  `Romance comedy`,
+  `Triller`,
   `Sci-fi`,
   `Horror`,
   `Documentary`,

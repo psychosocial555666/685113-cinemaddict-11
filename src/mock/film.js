@@ -25,7 +25,7 @@ const generateFilm = () => {
       rating: `${getRandomFractionalNumber(3, 9)}`,
       year: ` ${getRandomNumber(1920, 2020)}`,
       duration: getRandomNumber(60, 180),
-      genre: makeRandomArr(genres).slice(0, 3),
+      genre: makeRandomArr(genres).slice(0, getRandomNumber(1, 3)),
       url: getRandomArrayItem(urls),
       description: makeRandomArr(descriptions).slice(0, getRandomNumber(1, 5)),
       comments: generateComments(),

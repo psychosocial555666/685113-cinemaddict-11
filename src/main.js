@@ -9,9 +9,10 @@ import {generateFilms} from "./mock/film";
 import {createPopupTemplate} from "./components/popup";
 import {createStatisticsTemplate} from "./components/statistics";
 import {generateStatistics} from "./mock/statistics";
+import {createStatisticsSectionTemplate} from "./components/statistics-section";
 
 
-const CARDS_COUNT = 21;
+const CARDS_COUNT = 25;
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
 const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
@@ -29,6 +30,7 @@ const mainContainer = document.querySelector(`.main`);
 
 render(headerContainer, createProfileRateTemplate(statistics));
 render(mainContainer, createMainMenuTemplate(filters));
+render(mainContainer, createStatisticsSectionTemplate(statistics));
 render(mainContainer, createSortTemplate());
 render(mainContainer, createFilmsTemplate());
 
