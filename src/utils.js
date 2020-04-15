@@ -85,7 +85,7 @@ const getUserRating = (arr) => {
     userRating = `Novice`;
   } else if (watchedMoviesQuantity > 10 && watchedMoviesQuantity <= 20) {
     userRating = `Fan`;
-  } else {
+  } else if (watchedMoviesQuantity > 21) {
     userRating = `Movie Buff`;
   }
   return userRating;
