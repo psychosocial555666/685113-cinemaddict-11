@@ -1,6 +1,6 @@
-import {transformTimeFormat} from "../utils";
+import {transformTimeFormat, createElement} from "../utils";
 
-export const createStatisticsSectionTemplate = (stats) => {
+const createStatisticsSectionTemplate = (stats) => {
   const {rating, totalMovies, totalDuration, topGenre, avatar} = stats;
   return (
     `<section class="statistic">
@@ -49,3 +49,26 @@ export const createStatisticsSectionTemplate = (stats) => {
       </div>`
   );
 };
+export default class StatisticsSection {
+  constructor(stats) {
+    this._stats = stats;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatisticsSectionTemplate(this._stats);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

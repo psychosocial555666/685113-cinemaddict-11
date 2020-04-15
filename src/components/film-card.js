@@ -1,6 +1,6 @@
-import {transformTimeFormat} from "../utils";
+import {transformTimeFormat, createElement} from "../utils";
 
-export const createFilmCardTemplate = (film, index) => {
+const createFilmCardTemplate = (film, index) => {
   const {title, rating, year, duration, genre, url, description, comments, isInWatchlist, isInHistory, isInFavorites} = film;
   const watchlistButtonClass = isInWatchlist ? `film-card__controls-item--active` : ``;
   const historyButtonClass = isInHistory ? `film-card__controls-item--active` : ``;
@@ -26,3 +26,30 @@ export const createFilmCardTemplate = (film, index) => {
         </article>`
   );
 };
+
+export default class Film {
+  constructor(film, index) {
+    this._index = index;
+
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film, this._index);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

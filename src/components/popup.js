@@ -1,4 +1,4 @@
-import {transformTimeFormat} from "../utils";
+import {transformTimeFormat, createElement} from "../utils";
 
 const createGenreItem = (genre) => {
   return (
@@ -25,7 +25,7 @@ const createCommentItem = (smile, author, text, date) => {
 };
 
 
-export const createPopupTemplate = (film) => {
+const createPopupTemplate = (film) => {
   const {title, rating, year, duration, genre, url, description, comments, age, director, writers, actors, release, country} = film;
 
   const commentItems = film.comments.map((it) => createCommentItem(it.smile, it.author, it.text, it.date)).join(`\n`);
@@ -155,3 +155,27 @@ export const createPopupTemplate = (film) => {
         </section>`
   );
 };
+
+export default class Popup {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

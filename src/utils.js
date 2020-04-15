@@ -1,3 +1,8 @@
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
 const transformTimeFormat = (filmTime) => {
   const filmHours = Math.floor(filmTime / 60);
   const filmMinutes = filmTime - (filmHours * 60);
@@ -37,8 +42,8 @@ const makeRandomArr = (array) => {
   return array.sort(shuffle);
 };
 
-const getArrayFromText = (array) => {
-  return array. split(`.`);
+const getArrayFromText = (text) => {
+  return text. split(`. `);
 };
 
 const getFavoriteGenre = (arr) => {
@@ -80,10 +85,30 @@ const getUserRating = (arr) => {
     userRating = `Novice`;
   } else if (watchedMoviesQuantity > 10 && watchedMoviesQuantity <= 20) {
     userRating = `Fan`;
-  } else {
+  } else if (watchedMoviesQuantity > 21) {
     userRating = `Movie Buff`;
   }
   return userRating;
 };
 
-export {transformTimeFormat, getFavoriteGenre, getUserRating, getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr, getArrayFromText};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const render = (container, element, place = RenderPosition.BEFOREEND) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export {transformTimeFormat, getFavoriteGenre, getUserRating, getRandomDate, getRandomArrayItem,
+  getRandomNumber, getRandomFractionalNumber, makeRandomArr, getArrayFromText, createElement, render,
+  RenderPosition};

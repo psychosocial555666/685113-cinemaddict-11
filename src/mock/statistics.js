@@ -9,8 +9,8 @@ const generateStatistics = (array) => {
   return {
     rating: getUserRating(watchedMovies),
     totalMovies: watchedMovies.length,
-    totalDuration: durations.reduce((a, b) => a + b),
-    topGenre: getFavoriteGenre(array),
+    totalDuration: watchedMovies.length > 0 ? durations.reduce((a, b) => a + b) : ``,
+    topGenre: watchedMovies.length > 0 ? getFavoriteGenre(array) : ``,
     avatar: `images/bitmap@2x.png`,
   };
 };
