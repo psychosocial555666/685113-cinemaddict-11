@@ -16,7 +16,7 @@ import {generateStatistics} from "./mock/statistics";
 import {render} from "./utils.js";
 
 
-const CARDS_COUNT = 150;
+const CARDS_COUNT = 16;
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
 const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
@@ -32,7 +32,12 @@ const mainContainer = document.querySelector(`.main`);
 render(headerContainer, new ProfileComponent(statistics).getElement());
 render(mainContainer, new MainNavComponent(filters).getElement());
 render(mainContainer, new SortComponent().getElement());
-// Отрисовка карточки фильма
+render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
+
+
+// Отрисовка карточки фильма!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 const renderFilm = (filmElement, film) => {
   const openPopup = () => {
     bodyContainer.appendChild(popupComponent.getElement());
@@ -83,7 +88,9 @@ const renderFilm = (filmElement, film) => {
   render(filmElement, filmComponent.getElement());
 };
 
-// Отрисовка контейнера для карточек
+
+// Отрисовка контейнера для карточек!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 const renderFilms = (filmsComponent, filmsArr) => {
   const filmsList = filmsComponent.getElement().querySelector(`.films-list`);
@@ -113,7 +120,7 @@ const renderFilms = (filmsComponent, filmsArr) => {
   const showMoreComponent = new ShowMoreComponent();
 
   render(filmsList, showMoreComponent.getElement());
-  const showMoreButton = filmsList.querySelector(`.films-list__show-more`);
+  const showMoreButton = showMoreComponent.getElement();
   showMoreButton.addEventListener(`click`, () => {
     const prevFilmsCount = currentFilmsCount;
     currentFilmsCount = currentFilmsCount + SHOWING_CARDS_ON_BUTTON_CLICK;
@@ -121,7 +128,8 @@ const renderFilms = (filmsComponent, filmsArr) => {
     filmsArr.slice(prevFilmsCount, currentFilmsCount).forEach((film) => (renderFilm(filmsListContaner, film)));
 
     if (currentFilmsCount >= films.length) {
-      showMoreButton.remove();
+      showMoreComponent.getElement().remove();
+      showMoreComponent.removeElement();
     }
   });
 };
@@ -134,8 +142,6 @@ if (films.length === 0) {
   render(mainContainer, filmsComponent.getElement());
   renderFilms(filmsComponent, films);
 }
-
-render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
 
 const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
 
