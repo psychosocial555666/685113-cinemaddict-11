@@ -1,5 +1,5 @@
 
-import {getArrayFromText} from "./../utils";
+import {getArrayFromText} from "./../utils/common.js";
 
 const titles = [
   `The Dance of Life`,
