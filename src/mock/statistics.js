@@ -1,4 +1,4 @@
-import {getUserRating, getFavoriteGenre} from "../utils";
+import {getUserRating, getFavoriteGenre} from "../utils/common.js";
 
 const generateStatistics = (array) => {
   const watchedMovies = array.filter((it)=> it.isInHistory);

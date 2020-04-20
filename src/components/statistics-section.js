@@ -1,4 +1,5 @@
-import {transformTimeFormat, createElement} from "../utils";
+import {transformTimeFormat} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createStatisticsSectionTemplate = (stats) => {
   const {rating, totalMovies, totalDuration, topGenre, avatar} = stats;
@@ -49,26 +50,13 @@ const createStatisticsSectionTemplate = (stats) => {
       </div>`
   );
 };
-export default class StatisticsSection {
+export default class StatisticsSection extends AbstractComponent {
   constructor(stats) {
+    super();
     this._stats = stats;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createStatisticsSectionTemplate(this._stats);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

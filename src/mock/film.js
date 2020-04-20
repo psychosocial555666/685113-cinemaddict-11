@@ -1,5 +1,5 @@
 import {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries} from "./data";
-import {getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr} from "../utils";
+import {getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr} from "../utils/common.js";
 
 const generateComment = () => {
   return {
