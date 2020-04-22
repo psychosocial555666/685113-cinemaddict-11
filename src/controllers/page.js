@@ -145,9 +145,5 @@ export default class PageController {
     });
 
     renderShowMoreButton();
-
-    this._sortComponent.setSortTypeChangeHandler(() => {
-
-    });
   }
 }
