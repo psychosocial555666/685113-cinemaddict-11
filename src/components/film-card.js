@@ -1,11 +1,18 @@
 import {transformTimeFormat} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
+const createButtonMarkup = (name, title, isActive = false) => {
+  return (
+    `<button class="film-card__controls-item button film-card__controls-item--${name} ${isActive ? `` : `film-card__controls-item--active`}">${title}</button>`
+  );
+};
+
 const createFilmCardTemplate = (film, index) => {
   const {title, rating, year, duration, genre, url, description, comments, isInWatchlist, isInHistory, isInFavorites} = film;
-  const watchlistButtonClass = isInWatchlist ? `film-card__controls-item--active` : ``;
-  const historyButtonClass = isInHistory ? `film-card__controls-item--active` : ``;
-  const favoritesButtonClass = isInFavorites ? `film-card__controls-item--active` : ``;
+
+  const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isInWatchlist);
+  const historyButton = createButtonMarkup(`mark-as-watched`, `Mark as watched`, !isInHistory);
+  const favoritesButton = createButtonMarkup(`favorite`, `Mark as favorite`, !isInFavorites);
 
   return (
     `<article class="film-card">
@@ -20,9 +27,9 @@ const createFilmCardTemplate = (film, index) => {
           <p class="film-card__description">${description}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlistButtonClass}">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${historyButtonClass}">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite ${favoritesButtonClass}">Mark as favorite</button>
+            ${watchlistButton}
+            ${historyButton}
+            ${favoritesButton}
           </form>
         </article>`
   );
@@ -52,6 +59,21 @@ export default class Film extends AbstractComponent {
   setCommentsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__comments`)
     .addEventListener(`click`, handler);
+  }
+
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setHistoryButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
   }
 }
 

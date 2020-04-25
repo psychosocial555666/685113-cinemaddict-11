@@ -38,6 +38,7 @@ const generateFilm = () => {
       isInWatchlist: Math.random() > 0.5,
       isInHistory: Math.random() > 0.5,
       isInFavorites: Math.random() > 0.5,
+      emotion: ``,
     }
   );
 };
