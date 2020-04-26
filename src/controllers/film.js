@@ -12,10 +12,11 @@ const Mode = {
 const bodyContainer = document.querySelector(`body`);
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, typeFilm) {
     this._container = container;
     this._filmComponent = null;
     this._popupComponent = null;
+    this._typeFilm = typeFilm;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -23,7 +24,6 @@ export default class FilmController {
 
     this._openPopup = this._openPopup.bind(this);
     this._closePopup = this._closePopup.bind(this);
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   _openPopup() {
@@ -32,18 +32,14 @@ export default class FilmController {
     this._mode = Mode.EDIT;
   }
 
-  _closePopup() {
+  _closePopup(film) {
+    this._onDataChange(film, Object.assign({}, film, {
+      isInHistory: this._popupComponent._isInHistory,
+      isInFavorites: this._popupComponent._isInFavorites,
+      isInWatchlist: this._popupComponent._isInWatchlist
+    }), this._typeFilm);
     bodyContainer.removeChild(this._popupComponent.getElement());
     this._mode = Mode.DEFAULT;
-  }
-
-  _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    }
   }
 
   setDefaultView() {
@@ -59,50 +55,56 @@ export default class FilmController {
     this._filmComponent = new FilmComponent(film);
     this._popupComponent = new PopupComponent(film);
 
+    const onEscKeyDown = (evt) => {
+      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+      if (isEscKey) {
+        this._closePopup(film);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
 
     this._filmComponent.setPosterClickHandler(() => {
       this._openPopup();
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setTitleClickHandler(() => {
       this._openPopup();
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setCommentsClickHandler(() => {
       this._openPopup();
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
 
     this._popupComponent.setCloseButtonClick(() => {
-      this._closePopup();
-      this._onDataChange(this, film, Object.assign({}, film, {
-        isInHistory: film.isInHistory,
-      }));
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._closePopup(film);
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(film, Object.assign({}, film, {
         isInWatchlist: !film.isInWatchlist,
-      }));
+      }), this._typeFilm);
     });
 
     this._filmComponent.setHistoryButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(film, Object.assign({}, film, {
         isInHistory: !film.isInHistory,
-      }));
+      }), this._typeFilm);
     });
 
     this._filmComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, film, Object.assign({}, film, {
+      this._onDataChange(film, Object.assign({}, film, {
         isInFavorites: !film.isInFavorites,
-      }));
+      }), this._typeFilm);
     });
 
     if (oldFilmComponent && oldPopupComponent) {

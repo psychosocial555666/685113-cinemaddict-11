@@ -13,7 +13,7 @@ import {generateStatistics} from "./mock/statistics";
 import {render} from "./utils/render.js";
 
 
-const CARDS_COUNT = 4;
+const CARDS_COUNT = 22;
 
 const films = generateFilms(CARDS_COUNT);
 const filters = generateFilters(films);

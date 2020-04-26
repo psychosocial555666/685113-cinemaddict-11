@@ -174,11 +174,17 @@ const createPopupTemplate = (film) => {
 };
 
 export default class Popup extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, onDataChange) {
     super();
     this._film = film;
+    this._onDataChange = onDataChange;
     this._closeButtonHandler = null;
+
     this._subscribeOnEvents();
+
+    this._isInFavorites = film.isInFavorites;
+    this._isInWatchlist = film.isInWatchlist;
+    this._isInHistory = film.isInHistory;
   }
 
   getTemplate() {
@@ -198,17 +204,15 @@ export default class Popup extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, () => {
-      this._film.isInWatchlist = !this._film.isInWatchlist;
-      this.rerender();
+      this._isInWatchlist = !this._isInWatchlist;
     });
     element.querySelector(`.film-details__control-label--watched`).addEventListener(`click`, () => {
-      this._film.isInHistory = !this._film.isInHistory;
-      this.rerender();
+      this._isInHistory = !this._isInHistory;
     });
     element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
-      this._film.isInFavorites = !this._film.isInFavorites;
-      this.rerender();
+      this._isInFavorites = !this._isInFavorites;
     });
+
     element.querySelectorAll(`.film-details__emoji-label`).forEach((it) => {
       it.addEventListener(`click`, (evt) => {
         this._film.emotion = evt.target.src;
