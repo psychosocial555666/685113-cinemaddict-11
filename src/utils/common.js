@@ -1,4 +1,6 @@
 
+// import moment from "moment";
+
 const transformTimeFormat = (filmTime) => {
   const filmHours = Math.floor(filmTime / 60);
   const filmMinutes = filmTime - (filmHours * 60);
@@ -12,7 +14,6 @@ const getRandomDate = () => {
   const diffValue = sign * getRandomNumber(0, 8);
 
   targetDate.setDate(targetDate.getDate() + diffValue);
-
   return targetDate;
 };
 
