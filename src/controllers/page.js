@@ -87,7 +87,7 @@ export default class PageController {
 
     this._filmsListContaner.innerHTML = ``;
 
-    this._showedFilmControllers = this._showedFilmControllers.concat(this._renderFilms(this._filmsListContaner, sortedFilms.slice(0, this._currentFilmsCount), this._onDataChange, TypeFilm.ALL));
+    this._showedFilmControllers = this._renderFilms(this._filmsListContaner, sortedFilms.slice(0, this._currentFilmsCount), this._onDataChange, TypeFilm.ALL);
 
     // const newFilms = this._renderFilms(this._filmsListContaner, sortedFilms.slice(0, this._currentFilmsCount), this._onDataChange);
     // this._showedFilmControllers = newFilms;
@@ -153,9 +153,7 @@ export default class PageController {
     this._showMoreComponent.setClickHandler(() => {
       const prevFilmsCount = this._currentFilmsCount;
       this._currentFilmsCount = this._currentFilmsCount + SHOWING_CARDS_ON_BUTTON_CLICK;
-
-      this._showedFilmControllers = this._showedFilmControllers.concat(this._renderFilms(this._filmsListContaner, filmsArray.slice(prevFilmsCount, this._currentFilmsCount), this._onDataChange, TypeFilm.ALL));
-
+      this._showedFilmControllers = this._renderFilms(this._filmsListContaner, filmsArray.slice(prevFilmsCount, this._currentFilmsCount), this._onDataChange, TypeFilm.ALL);
       // const newFilms = this._renderFilms(this._filmsListContaner, filmsArray.slice(prevFilmsCount, this._currentFilmsCount), this._onDataChange);
       // this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 

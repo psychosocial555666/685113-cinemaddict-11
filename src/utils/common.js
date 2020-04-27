@@ -1,19 +1,16 @@
 
-// import moment from "moment";
+import moment from "moment";
 
 const transformTimeFormat = (filmTime) => {
-  const filmHours = Math.floor(filmTime / 60);
-  const filmMinutes = filmTime - (filmHours * 60);
-
-  return `${filmHours}h  ${filmMinutes}m`;
+  return moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`h[h] mm[m]`);
 };
 
-const getRandomDate = () => {
+const getRandomDate = (from, to) => {
   const targetDate = new Date();
-  const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * getRandomNumber(0, 8);
+  const diffValue = getRandomNumber(from, to);
 
-  targetDate.setDate(targetDate.getDate() + diffValue);
+  targetDate.setDate(targetDate.getDate() - diffValue);
+
   return targetDate;
 };
 

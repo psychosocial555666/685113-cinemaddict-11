@@ -1,12 +1,13 @@
 import {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries} from "./data";
 import {getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr} from "../utils/common.js";
+import moment from "moment";
 
 const generateComment = () => {
   return {
     smile: getRandomArrayItem(smiles),
     author: getRandomArrayItem(authors),
     text: getRandomArrayItem(commentTexts),
-    date: getRandomDate(),
+    date: `${moment(getRandomDate(0, 30)).calendar()}`,
   };
 };
 
@@ -23,7 +24,7 @@ const generateFilm = () => {
     {
       title: getRandomArrayItem(titles),
       rating: `${getRandomFractionalNumber(3, 9)}`,
-      year: ` ${getRandomNumber(1920, 2020)}`,
+      year: ` ${moment(getRandomDate(0, 30000)).format(`YYYY`)}`,
       duration: getRandomNumber(60, 180),
       genre: makeRandomArr(genres).slice(0, getRandomNumber(1, 3)),
       url: getRandomArrayItem(urls),
@@ -33,7 +34,7 @@ const generateFilm = () => {
       actors: getRandomArrayItem(actors),
       writers: getRandomArrayItem(writers),
       director: getRandomArrayItem(directors),
-      release: getRandomArrayItem(releases),
+      release: ` ${moment(getRandomDate(0, 30000)).format(`DD[ ]MMMM`)}`,
       country: getRandomArrayItem(countries),
       isInWatchlist: Math.random() > 0.5,
       isInHistory: Math.random() > 0.5,
