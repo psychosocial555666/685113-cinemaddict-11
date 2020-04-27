@@ -1,4 +1,4 @@
-import {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, releases, countries} from "./data";
+import {titles, genres, urls, descriptions, authors, smiles, commentTexts, ages, directors, actors, writers, countries} from "./data";
 import {getRandomDate, getRandomArrayItem, getRandomNumber, getRandomFractionalNumber, makeRandomArr} from "../utils/common.js";
 import moment from "moment";
 
