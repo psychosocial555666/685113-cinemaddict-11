@@ -1,4 +1,5 @@
 import FilmsComponent from "./components/films";
+import FilmsModel from "./models/films.js";
 import MainNavComponent from "./components/main-nav";
 import NoFilmsComponent from "./components/no-films";
 import ProfileComponent from "./components/profile";
@@ -16,6 +17,9 @@ import {render} from "./utils/render.js";
 const CARDS_COUNT = 22;
 
 const films = generateFilms(CARDS_COUNT);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
+
 const filters = generateFilters(films);
 const statistics = generateStatistics(films);
 
@@ -27,13 +31,13 @@ render(mainContainer, new MainNavComponent(filters).getElement());
 render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
 
 const filmsComponent = new FilmsComponent();
-const pageController = new PageController(filmsComponent);
+const pageController = new PageController(filmsComponent, filmsModel);
 
 if (films.length === 0) {
   render(mainContainer, new NoFilmsComponent().getElement());
 } else {
   render(mainContainer, filmsComponent.getElement());
-  pageController.render(films);
+  pageController.render();
 }
 
 const footerStaticticsContainer = document.querySelector(`.footer__statistics`);

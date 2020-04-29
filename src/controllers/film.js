@@ -64,6 +64,7 @@ export default class FilmController {
       }
     };
 
+    // Обработчики открытия попапа
 
     this._filmComponent.setPosterClickHandler(() => {
       this._openPopup();
@@ -80,11 +81,14 @@ export default class FilmController {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
+    // Закрытие попапа
 
     this._popupComponent.setCloseButtonClick(() => {
       this._closePopup(film);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
+
+    // Обработчики клика по кнопкам добавления категорий
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
@@ -106,6 +110,8 @@ export default class FilmController {
         isInFavorites: !film.isInFavorites,
       }), this._typeFilm);
     });
+
+    // Замена старых компонент на новые
 
     if (oldFilmComponent && oldPopupComponent) {
       replace(this._filmComponent, oldFilmComponent);

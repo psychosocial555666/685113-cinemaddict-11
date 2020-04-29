@@ -7,7 +7,7 @@ const createButtonMarkup = (name, title, isActive = false) => {
   );
 };
 
-const createFilmCardTemplate = (film, index) => {
+const createFilmCardTemplate = (film) => {
   const {title, rating, year, duration, genre, url, description, comments, isInWatchlist, isInHistory, isInFavorites} = film;
 
   const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isInWatchlist);
@@ -23,7 +23,7 @@ const createFilmCardTemplate = (film, index) => {
             <span class="film-card__duration">${transformTimeFormat(duration)}</span>
             <span class="film-card__genre">${genre[0]}</span>
           </p>
-          <img src="${url}" alt="" id="${index}" class="film-card__poster">
+          <img src="${url}" alt="" class="film-card__poster">
           <p class="film-card__description">${description}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
@@ -36,9 +36,10 @@ const createFilmCardTemplate = (film, index) => {
 };
 
 export default class Film extends AbstractComponent {
-  constructor(film, index) {
+  constructor(film) {
+
     super();
-    this._index = index;
+
     this._film = film;
   }
 

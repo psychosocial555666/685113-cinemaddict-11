@@ -4,10 +4,11 @@ import moment from "moment";
 
 const generateComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     smile: getRandomArrayItem(smiles),
     author: getRandomArrayItem(authors),
     text: getRandomArrayItem(commentTexts),
-    date: `${moment(getRandomDate(0, 30)).calendar()}`,
+    date: `${moment(getRandomDate(0, 30)).calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}`,
   };
 };
 
@@ -22,6 +23,7 @@ const generateComments = () => {
 const generateFilm = () => {
   return (
     {
+      id: String(new Date() + Math.random()),
       title: getRandomArrayItem(titles),
       rating: `${getRandomFractionalNumber(3, 9)}`,
       year: ` ${moment(getRandomDate(0, 30000)).format(`YYYY`)}`,
