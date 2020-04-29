@@ -2,7 +2,7 @@ import FilmComponent from "../components/film-card";
 import PopupComponent from "../components/popup";
 
 
-import {render, replace} from "../utils/render.js";
+import {render, replace, remove} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -46,6 +46,12 @@ export default class FilmController {
     if (this._mode !== Mode.DEFAULT) {
       this._closePopup();
     }
+  }
+
+  destroy() {
+    remove(this._popupComponent);
+    remove(this._filmComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   render(film) {
