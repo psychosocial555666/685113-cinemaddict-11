@@ -30,7 +30,7 @@ const filterController = new FilterController(mainContainer, filmsModel);
 filterController.render();
 
 
-render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
+// render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
 
 const filmsComponent = new FilmsComponent();
 const pageController = new PageController(filmsComponent, filmsModel);

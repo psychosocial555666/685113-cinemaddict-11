@@ -46,6 +46,28 @@ export default class Films {
     return true;
   }
 
+  removeComment(id) {
+    this._films.forEach((film) => {
+      let comments = film.comments;
+      const index = comments.findIndex((it) => it.id === id);
+
+      if (index === -1) {
+        return false;
+      }
+
+      comments = [].concat(comments.slice(0, index), comments.slice(index + 1));
+
+      this._callHandlers(this._dataChangeHandlers);
+
+      return true;
+    });
+  }
+
+  addComment(film) {
+    this._films.comments = [].concat(film, this._films.comments);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }

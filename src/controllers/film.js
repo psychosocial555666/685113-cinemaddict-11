@@ -12,11 +12,11 @@ const Mode = {
 const bodyContainer = document.querySelector(`body`);
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, typeFilm) {
+  constructor(container, onDataChange, onViewChange, filmsModel) {
     this._container = container;
     this._filmComponent = null;
     this._popupComponent = null;
-    this._typeFilm = typeFilm;
+    this._filmsModel = filmsModel;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -37,7 +37,7 @@ export default class FilmController {
       isInHistory: this._popupComponent._isInHistory,
       isInFavorites: this._popupComponent._isInFavorites,
       isInWatchlist: this._popupComponent._isInWatchlist
-    }), this._typeFilm);
+    }));
     bodyContainer.removeChild(this._popupComponent.getElement());
     this._mode = Mode.DEFAULT;
   }
@@ -51,7 +51,6 @@ export default class FilmController {
   destroy() {
     remove(this._popupComponent);
     remove(this._filmComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   render(film) {
@@ -59,7 +58,7 @@ export default class FilmController {
     const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
-    this._popupComponent = new PopupComponent(film);
+    this._popupComponent = new PopupComponent(film, this._filmsModel);
 
     const onEscKeyDown = (evt) => {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
@@ -100,21 +99,21 @@ export default class FilmController {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInWatchlist: !film.isInWatchlist,
-      }), this._typeFilm);
+      }));
     });
 
     this._filmComponent.setHistoryButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInHistory: !film.isInHistory,
-      }), this._typeFilm);
+      }));
     });
 
     this._filmComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInFavorites: !film.isInFavorites,
-      }), this._typeFilm);
+      }));
     });
 
     // Замена старых компонент на новые

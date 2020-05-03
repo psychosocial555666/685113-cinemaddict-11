@@ -1,6 +1,5 @@
 import {FilterType} from "../controllers/filter.js";
 
-
 export const getWatchlistFilms = (films) => {
   return films.filter((film) => film.isInWatchlist);
 };
