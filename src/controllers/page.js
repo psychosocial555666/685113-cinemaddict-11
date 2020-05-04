@@ -63,6 +63,13 @@ export default class PageController {
     this._filmsListCommentedContaner = this._filmsListExtra[1].querySelector(`.films-list__container`);
   }
 
+  hide() {
+    this._container.hide();
+  }
+
+  show() {
+    this._container.show();
+  }
 
   render() {
     const films = this._filmsModel.getFilms();

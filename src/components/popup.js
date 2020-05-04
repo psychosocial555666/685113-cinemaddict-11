@@ -1,6 +1,7 @@
 import {transformTimeFormat} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import CommentsController from "../controllers/comments.js";
+import {createElement, render, RenderPosition} from "../utils/render";
+import CommentsComponent from "./comments";
 
 const createGenreItem = (genre) => {
   return (
@@ -15,9 +16,8 @@ const createCheckboxMarkup = (name, title, isActive = false) => {
   );
 };
 
-const createPopupTemplate = (film, comments) => {
+const createPopupTemplate = (film) => {
   const {title, rating, year, duration, genre, url, description, age, director, writers, actors, release, country} = film;
-
 
   const watchlistInput = createCheckboxMarkup(`watchlist`, `Add to watchlist`, !film.isInWatchlist);
   const historyInput = createCheckboxMarkup(`watched`, `Allready watched`, !film.isInHistory);
@@ -35,22 +35,22 @@ const createPopupTemplate = (film, comments) => {
               <div class="film-details__info-wrap">
                 <div class="film-details__poster">
                   <img class="film-details__poster-img" src=${url} alt="">
-        
+
                   <p class="film-details__age">${age}</p>
                 </div>
-        
+
                 <div class="film-details__info">
                   <div class="film-details__info-head">
                     <div class="film-details__title-wrap">
                       <h3 class="film-details__title">${title}</h3>
                       <p class="film-details__title-original">Original: ${title}</p>
                     </div>
-        
+
                     <div class="film-details__rating">
                       <p class="film-details__total-rating">${rating}</p>
                     </div>
                   </div>
-        
+
                   <table class="film-details__table">
                     <tr class="film-details__row">
                       <td class="film-details__term">Director</td>
@@ -83,22 +83,21 @@ const createPopupTemplate = (film, comments) => {
                       </td>
                     </tr>
                   </table>
-        
+
                   <p class="film-details__film-description">
                   ${description}
                   </p>
                 </div>
               </div>
-        
+
               <section class="film-details__controls">
                 ${watchlistInput}
                 ${historyInput}
                 ${favoritesInput}
               </section>
             </div>
-        
+
             <div class="form-details__bottom-container">
-            ${comments}
             </div>
           </form>
         </section>`
@@ -112,7 +111,7 @@ export default class Popup extends AbstractSmartComponent {
     this._filmsModel = filmsModel;
     this._closeButtonHandler = null;
     this._deleteButtonClickHandler = null;
-    this._commentsController = new CommentsController(this._filmsModel).render(film);
+    this._comments = new CommentsComponent(film, this._onDataChange);
 
     this._subscribeOnEvents();
 
@@ -122,7 +121,15 @@ export default class Popup extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._film, this._commentsController);
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+      render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN);
+    }
+    return this._element;
   }
 
   recoveryListeners() {
@@ -146,13 +153,6 @@ export default class Popup extends AbstractSmartComponent {
     });
     element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
       this._isInFavorites = !this._isInFavorites;
-    });
-
-    element.querySelectorAll(`.film-details__emoji-label`).forEach((it) => {
-      it.addEventListener(`click`, (evt) => {
-        this._film.emotion = evt.target.src;
-        this.rerender();
-      });
     });
   }
 
