@@ -17,7 +17,7 @@ const createMainMenuTemplate = (filters) => {
           <div class="main-navigation__items">
             ${navItems}
           </div>
-          <a href="#stats" class="main-navigation__additional">Stats</a>
+          <a href="#stats" id = "Stats" class="main-navigation__additional">Stats</a>
         </nav>`
   );
 };
@@ -33,10 +33,12 @@ export default class MainNav extends AbstractComponent {
   }
 
   setFilterChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      const filterName = evt.target.id;
-      handler(filterName);
+    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((it) => {
+      it.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        const filterName = evt.target.id;
+        handler(filterName);
+      });
     });
   }
 }

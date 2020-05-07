@@ -8,29 +8,44 @@ import StatisticsComponent from "./components/statistics";
 import PageController from "./controllers/page.js";
 
 import {generateFilms} from "./mock/film";
-import {generateStatistics} from "./mock/statistics";
 
 import {render} from "./utils/render.js";
 
-
-const CARDS_COUNT = 6;
+const CARDS_COUNT = 24;
 
 const films = generateFilms(CARDS_COUNT);
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
-const statistics = generateStatistics(films);
-
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 
-render(headerContainer, new ProfileComponent(statistics).getElement());
+render(headerContainer, new ProfileComponent(filmsModel.getFilms()).getElement());
 
 const filterController = new FilterController(mainContainer, filmsModel);
 filterController.render();
 
+const statisticsSectionComponent = new StatisticsSectionComponent(filmsModel.getFilms());
 
-// render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
+render(mainContainer, statisticsSectionComponent.getElement());
+statisticsSectionComponent.hide();
+
+filterController.setStatsClickHandler(() => {
+  statisticsSectionComponent.show();
+  pageController.hide();
+  document.querySelectorAll(`.main-navigation__item`).forEach((it) => {
+    it.classList.remove(`main-navigation__item--active`);
+  });
+  document.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
+  filterController.recoveryFilterListeners();
+});
+
+filterController.setFiltersClickHandler(() => {
+  statisticsSectionComponent.hide();
+  pageController.show();
+  document.querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
+  filterController.recoveryFilterListeners();
+});
 
 const filmsComponent = new FilmsComponent();
 const pageController = new PageController(filmsComponent, filmsModel);

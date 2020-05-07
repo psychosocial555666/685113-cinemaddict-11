@@ -16,6 +16,8 @@ export default class FilterController {
 
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
+    this._statsClickHandler = null;
+    this._filtersClickHandler = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -52,5 +54,29 @@ export default class FilterController {
 
   _onDataChange() {
     this.render();
+  }
+
+  recoveryFilterListeners() {
+    this.setFiltersClickHandler(this._filtersClickHandler);
+    this.setStatsClickHandler(this._statsClickHandler);
+  }
+
+  setStatsClickHandler(handler) {
+    this._filterComponent.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+      this._statsClickHandler = handler;
+    });
+
+  }
+
+  setFiltersClickHandler(handler) {
+    this._filterComponent.getElement().querySelectorAll(`.main-navigation__item`).forEach((it) => {
+      it.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
+    });
+    this._filtersClickHandler = handler;
   }
 }

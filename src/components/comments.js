@@ -1,7 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import moment from "moment";
 import {encode} from "he";
-import {getRandomDate} from "../utils/common";
 
 const createCommentsTemplate = (film) => {
 
@@ -125,7 +124,7 @@ export default class Comments extends AbstractSmartComponent {
         const comment = {
           id: String((new Date()).valueOf() + Math.random()),
           text, smile,
-          date: `${moment(getRandomDate(0, 30)).calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}`,
+          date: `${moment().calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}`,
           author: `Random author`
         };
         this._film.comments.push(comment);

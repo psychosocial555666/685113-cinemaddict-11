@@ -103,10 +103,11 @@ export default class PageController {
 
 
   _onFilterChange() {
+    this._currentFilmsCount = SHOWING_CARDS_ON_START;
     this._updateFilms(SHOWING_CARDS_ON_START);
-    // remove(this._sortComponent);
-    // render(this._container.getElement(), this._sortComponent.getElement(), RenderPosition.AFTERBEGIN);
-    // this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    remove(this._sortComponent);
+    render(this._container.getElement(), this._sortComponent.getElement(), RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
 
@@ -181,7 +182,7 @@ export default class PageController {
 
     this._showedFilmControllers = this._showedFilmControllers.concat(this._renderFilms(this._filmsListContaner, sortedFilms));
 
-    if (this._currentFilmsCount >= sortedFilms.length) {
+    if (this._currentFilmsCount >= films.length) {
       remove(this._showMoreComponent);
     }
   }
