@@ -106,6 +106,8 @@ export default class PageController {
     this._currentFilmsCount = SHOWING_CARDS_ON_START;
     this._updateFilms(SHOWING_CARDS_ON_START);
     remove(this._sortComponent);
+    this._sortComponent.removeElement();
+    this._sortComponent = new SortComponent();
     render(this._container.getElement(), this._sortComponent.getElement(), RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }

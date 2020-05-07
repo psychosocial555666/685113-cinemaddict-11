@@ -92,10 +92,9 @@ const setTimeMark = (films) => {
 };
 
 const getFiltredFilmsByWatchDate = (films, numberOfDays) => {
-  const filtredFilms = films.slice(0, films.length)
-                       .filter((film) => {
-                         return (Math.floor((new Date() - film.watchingDate) / 86400000)) < numberOfDays;
-                       });
+  const filtredFilms = films.slice(0, films.length).filter((film) => {
+    return (Math.floor((new Date() - film.watchingDate) / 86400000)) < numberOfDays;
+  });
   return filtredFilms;
 };
 
@@ -104,7 +103,6 @@ const createStatisticsSectionTemplate = (films) => {
   const rating = getUserRating(films);
   const totalMovies = films.length;
   const totalDuration = films.length > 0 ? durations.reduce((a, b) => a + b) : ``;
-  debugger;
   const topGenre = films.length > 0 ? getFavoriteGenre(films) : ``;
   const avatar = `images/bitmap@2x.png`;
 
@@ -184,7 +182,6 @@ export default class StatisticsSection extends AbstractSmartComponent {
   recoveryListeners() {
     this.getElement().querySelectorAll(`.statistic__filters-input`).forEach((it) => {
       it.addEventListener(`change`, (evt) => {
-        evt.target.checked = true;
         const statisticFilter = evt.target.value;
         switch (statisticFilter) {
           case StatisticFilter.ALL:
@@ -232,14 +229,4 @@ export default class StatisticsSection extends AbstractSmartComponent {
       this._genreChart = null;
     }
   }
-  // setStatisticFilterChangeHandler(handler) {
-  //   this.getElement().querySelectorAll(`.statistic__filters-input`).forEach((it) => {
-  //     it.addEventListener(`change`, (evt) => {
-  //       evt.preventDefault();
-  //       const statisticFilter = evt.target.value;
-  //       console.log(statisticFilter)
-  //       // handler(statisticFilter);
-  //     });
-  //   });
-  // }
 }

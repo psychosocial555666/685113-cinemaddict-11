@@ -1,10 +1,10 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createNavItem = (filter) => {
   const {name, count, checked} = filter;
 
   return (
-    `<a href="#${name}" id = "${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name} <span class="main-navigation__item-count">${count}</span></a>`
+    `<a href="#${name}" id = "${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name} ${name === `All movies` ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
   );
 };
 
@@ -22,14 +22,23 @@ const createMainMenuTemplate = (filters) => {
   );
 };
 
-export default class MainNav extends AbstractComponent {
+export default class MainNav extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+    this._filterChangeHandler = null;
   }
 
   getTemplate() {
     return createMainMenuTemplate(this._filters);
+  }
+
+  recoveryListeners() {
+    this.setFilterChangeHandler(this._filterChangeHandler);
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   setFilterChangeHandler(handler) {
@@ -38,6 +47,7 @@ export default class MainNav extends AbstractComponent {
         evt.preventDefault();
         const filterName = evt.target.id;
         handler(filterName);
+        this._filterChangeHandler = handler;
       });
     });
   }
