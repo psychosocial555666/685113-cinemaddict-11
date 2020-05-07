@@ -167,7 +167,8 @@ export default class StatisticsSection extends AbstractSmartComponent {
     this._watchedMoviesByYear = getFiltredFilmsByWatchDate(this._watchedMovies, 365);
     this._genreChart = null;
 
-    this._renderCharts();
+    this._renderCharts(this._watchedMovies);
+    this.recoveryListeners();
   }
 
   getTemplate() {
@@ -176,7 +177,7 @@ export default class StatisticsSection extends AbstractSmartComponent {
 
   show() {
     super.show();
-    this.rerender(this._watchedMovies);
+    this._renderCharts(this._watchedMovies);
   }
 
   recoveryListeners() {
@@ -185,42 +186,44 @@ export default class StatisticsSection extends AbstractSmartComponent {
         const statisticFilter = evt.target.value;
         switch (statisticFilter) {
           case StatisticFilter.ALL:
-            this.rerender(this._watchedMoviesByAllTime);
+            this._renderCharts(this._watchedMoviesByAllTime);
             break;
           case StatisticFilter.TODAY:
-            this.rerender(this._watchedMoviesByDay);
+            this._renderCharts(this._watchedMoviesByDay);
             break;
           case StatisticFilter.WEEK:
-            this.rerender(this._watchedMoviesByWeek);
+            this._renderCharts(this._watchedMoviesByWeek);
             break;
           case StatisticFilter.MONTH:
-            this.rerender(this._watchedMoviesByMonth);
+            this._renderCharts(this._watchedMoviesByMonth);
             break;
           case StatisticFilter.YEAR:
-            this.rerender(this._watchedMoviesByYear);
+            this._renderCharts(this._watchedMoviesByYear);
             break;
         }
       });
     });
   }
 
-  rerender(films) {
+  // rerender(films) {
+  //   this._watchedMovies = films;
+
+  //   super.rerender();
+  //   this.recoveryListeners();
+
+  //   this._renderCharts();
+  // }
+
+  _renderCharts(films) {
     this._watchedMovies = films;
 
-    super.rerender();
-    this.recoveryListeners();
-
-    this._renderCharts();
-  }
-
-  _renderCharts() {
     const element = this.getElement();
 
     const statisticsCtx = element.querySelector(`.statistic__chart`);
 
     this._resetCharts();
 
-    this._genreChart = renderGenresChart(statisticsCtx, this._watchedMovies);
+    this._genreChart = renderGenresChart(statisticsCtx, films);
   }
 
   _resetCharts() {

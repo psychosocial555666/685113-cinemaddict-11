@@ -37,14 +37,14 @@ filterController.setStatsClickHandler(() => {
     it.classList.remove(`main-navigation__item--active`);
   });
   document.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
-  filterController.recoveryFilterListeners();
+  filterController.recoveryFilterListener();
 });
 
 filterController.setFiltersClickHandler(() => {
   statisticsSectionComponent.hide();
   pageController.show();
   document.querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
-  filterController.recoveryFilterListeners();
+  filterController.recoveryStatsListener();
 });
 
 const filmsComponent = new FilmsComponent();

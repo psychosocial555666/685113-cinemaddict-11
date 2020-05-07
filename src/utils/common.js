@@ -3,7 +3,7 @@ import moment from "moment";
 
 const transformTimeFormat = (filmTime) => {
   if (filmTime) {
-    return moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`h[h] mm[m]`);
+    return moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
   } else {
     return `0h 0m`
   }

@@ -56,8 +56,11 @@ export default class FilterController {
     this.render();
   }
 
-  recoveryFilterListeners() {
+  recoveryFilterListener() {
     this.setFiltersClickHandler(this._filtersClickHandler);
+  }
+
+  recoveryStatsListener() {
     this.setStatsClickHandler(this._statsClickHandler);
   }
 
