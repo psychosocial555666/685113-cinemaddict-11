@@ -27,6 +27,7 @@ export default class MainNav extends AbstractSmartComponent {
     super();
     this._filters = filters;
     this._filterChangeHandler = null;
+    this._statChangeHandler = null;
   }
 
   getTemplate() {
@@ -35,10 +36,19 @@ export default class MainNav extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setFilterChangeHandler(this._filterChangeHandler);
+    this.setStatChangeHandler(this._statChangeHandler);
   }
 
   rerender() {
     super.rerender();
+  }
+
+  setStatChangeHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+      this._statChangeHandler = handler;
+    });
   }
 
   setFilterChangeHandler(handler) {

@@ -19,36 +19,26 @@ filmsModel.setFilms(films);
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
+const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
 
-render(headerContainer, new ProfileComponent(filmsModel.getFilms()).getElement());
-
-const filterController = new FilterController(mainContainer, filmsModel);
-filterController.render();
+const profileComponent = new ProfileComponent(filmsModel.getFilms());
+render(headerContainer, profileComponent.getElement());
 
 const statisticsSectionComponent = new StatisticsSectionComponent(filmsModel.getFilms());
 
 render(mainContainer, statisticsSectionComponent.getElement());
 statisticsSectionComponent.hide();
 
-filterController.setStatsClickHandler(() => {
-  statisticsSectionComponent.show();
-  pageController.hide();
-  document.querySelectorAll(`.main-navigation__item`).forEach((it) => {
-    it.classList.remove(`main-navigation__item--active`);
-  });
-  document.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
-  filterController.recoveryFilterListener();
-});
-
-filterController.setFiltersClickHandler(() => {
-  statisticsSectionComponent.hide();
-  pageController.show();
-  document.querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
-  filterController.recoveryStatsListener();
-});
+const statisticsComponent = new StatisticsComponent(films.length);
+render(footerStaticticsContainer, statisticsComponent.getElement());
 
 const filmsComponent = new FilmsComponent();
-const pageController = new PageController(filmsComponent, filmsModel);
+const pageController = new PageController(filmsComponent, filmsModel, profileComponent, statisticsSectionComponent);
+
+
+const filterController = new FilterController(mainContainer, filmsModel, pageController, statisticsSectionComponent);
+filterController.render();
+
 
 if (films.length === 0) {
   render(mainContainer, new NoFilmsComponent().getElement());
@@ -56,8 +46,4 @@ if (films.length === 0) {
   render(mainContainer, filmsComponent.getElement());
   pageController.render();
 }
-
-const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
-
-render(footerStaticticsContainer, new StatisticsComponent(films.length).getElement());
 

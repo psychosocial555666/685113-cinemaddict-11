@@ -3,7 +3,8 @@ import moment from "moment";
 
 const transformTimeFormat = (filmTime) => {
   if (filmTime) {
-    return moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
+    const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
+    return t;
   } else {
     return `0h 0m`
   }
@@ -66,7 +67,7 @@ const getUserRating = (arr) => {
     userRating = `Novice`;
   } else if (watchedMoviesQuantity > 10 && watchedMoviesQuantity <= 20) {
     userRating = `Fan`;
-  } else if (watchedMoviesQuantity > 21) {
+  } else if (watchedMoviesQuantity > 20) {
     userRating = `Movie Buff`;
   }
   return userRating;

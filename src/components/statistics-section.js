@@ -205,15 +205,6 @@ export default class StatisticsSection extends AbstractSmartComponent {
     });
   }
 
-  // rerender(films) {
-  //   this._watchedMovies = films;
-
-  //   super.rerender();
-  //   this.recoveryListeners();
-
-  //   this._renderCharts();
-  // }
-
   _renderCharts(films) {
     this._watchedMovies = films;
 

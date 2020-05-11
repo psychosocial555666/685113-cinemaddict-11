@@ -2,8 +2,13 @@
 import ShowMoreComponent from "../components/show-more";
 import SortComponent, {SortType} from "../components/sort";
 import FilmController from "./film.js";
+import ProfileComponent from "../components/profile";
+import StatisticsSectionComponent from "../components/statistics-section";
 
 import {render, remove, RenderPosition} from "../utils/render.js";
+
+const headerContainer = document.querySelector(`.header`);
+const mainContainer = document.querySelector(`.main`);
 
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
@@ -30,9 +35,12 @@ const getSortedFilms = (filmsArray, sortType, from, to) => {
 
 
 export default class PageController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, profileComponent, statisticsSectionComponent) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._profileComponent = profileComponent;
+    this._statisticsSectionComponent = statisticsSectionComponent;
+
     this._showMoreComponent = new ShowMoreComponent();
     this._sortComponent = new SortComponent();
 
@@ -155,6 +163,16 @@ export default class PageController {
         commentedController.render(newData);
       }
     }
+    remove(this._profileComponent);
+    this._profileComponent.removeElement();
+    this._profileComponent = new ProfileComponent(this._filmsModel.getFilms());
+    render(headerContainer, this._profileComponent.getElement());
+
+    // remove(this._statisticsSectionComponent);
+    // this._statisticsSectionComponent.removeElement();
+    // this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
+    // render(mainContainer, this._statisticsSectionComponent.getElement());
+    // this._statisticsSectionComponent.hide();
   }
 
 
