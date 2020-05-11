@@ -3,12 +3,12 @@ import ShowMoreComponent from "../components/show-more";
 import SortComponent, {SortType} from "../components/sort";
 import FilmController from "./film.js";
 import ProfileComponent from "../components/profile";
-import StatisticsSectionComponent from "../components/statistics-section";
+// import StatisticsSectionComponent from "../components/statistics-section";
 
 import {render, remove, RenderPosition} from "../utils/render.js";
 
 const headerContainer = document.querySelector(`.header`);
-const mainContainer = document.querySelector(`.main`);
+// const mainContainer = document.querySelector(`.main`);
 
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
