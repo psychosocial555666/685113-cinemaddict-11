@@ -1,42 +1,49 @@
 import FilmsComponent from "./components/films";
-import MainNavComponent from "./components/main-nav";
+import FilmsModel from "./models/films.js";
+import FilterController from "./controllers/filter.js";
 import NoFilmsComponent from "./components/no-films";
 import ProfileComponent from "./components/profile";
 import StatisticsSectionComponent from "./components/statistics-section";
 import StatisticsComponent from "./components/statistics";
 import PageController from "./controllers/page.js";
 
-import {generateFilters} from "./mock/filter";
 import {generateFilms} from "./mock/film";
-import {generateStatistics} from "./mock/statistics";
 
 import {render} from "./utils/render.js";
 
-
-const CARDS_COUNT = 22;
+const CARDS_COUNT = 24;
 
 const films = generateFilms(CARDS_COUNT);
-const filters = generateFilters(films);
-const statistics = generateStatistics(films);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
+const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
 
-render(headerContainer, new ProfileComponent(statistics).getElement());
-render(mainContainer, new MainNavComponent(filters).getElement());
-render(mainContainer, new StatisticsSectionComponent(statistics).getElement());
+const profileComponent = new ProfileComponent(filmsModel.getFilms());
+render(headerContainer, profileComponent.getElement());
+
+const statisticsSectionComponent = new StatisticsSectionComponent(filmsModel.getFilms());
+
+render(mainContainer, statisticsSectionComponent.getElement());
+statisticsSectionComponent.hide();
+
+const statisticsComponent = new StatisticsComponent(films.length);
+render(footerStaticticsContainer, statisticsComponent.getElement());
 
 const filmsComponent = new FilmsComponent();
-const pageController = new PageController(filmsComponent);
+const pageController = new PageController(filmsComponent, filmsModel, profileComponent, statisticsSectionComponent);
+
+
+const filterController = new FilterController(mainContainer, filmsModel, pageController, statisticsSectionComponent);
+filterController.render();
+
 
 if (films.length === 0) {
   render(mainContainer, new NoFilmsComponent().getElement());
 } else {
   render(mainContainer, filmsComponent.getElement());
-  pageController.render(films);
+  pageController.render();
 }
-
-const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
-
-render(footerStaticticsContainer, new StatisticsComponent(films.length).getElement());
 

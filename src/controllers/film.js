@@ -2,7 +2,7 @@ import FilmComponent from "../components/film-card";
 import PopupComponent from "../components/popup";
 
 
-import {render, replace} from "../utils/render.js";
+import {render, replace, remove} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -12,11 +12,11 @@ const Mode = {
 const bodyContainer = document.querySelector(`body`);
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, typeFilm) {
+  constructor(container, onDataChange, onViewChange, filmsModel) {
     this._container = container;
     this._filmComponent = null;
     this._popupComponent = null;
-    this._typeFilm = typeFilm;
+    this._filmsModel = filmsModel;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -37,7 +37,7 @@ export default class FilmController {
       isInHistory: this._popupComponent._isInHistory,
       isInFavorites: this._popupComponent._isInFavorites,
       isInWatchlist: this._popupComponent._isInWatchlist
-    }), this._typeFilm);
+    }));
     bodyContainer.removeChild(this._popupComponent.getElement());
     this._mode = Mode.DEFAULT;
   }
@@ -48,12 +48,17 @@ export default class FilmController {
     }
   }
 
+  destroy() {
+    remove(this._popupComponent);
+    remove(this._filmComponent);
+  }
+
   render(film) {
     const oldFilmComponent = this._filmComponent;
     const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
-    this._popupComponent = new PopupComponent(film);
+    this._popupComponent = new PopupComponent(film, this._filmsModel);
 
     const onEscKeyDown = (evt) => {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
@@ -64,6 +69,7 @@ export default class FilmController {
       }
     };
 
+    // Обработчики открытия попапа
 
     this._filmComponent.setPosterClickHandler(() => {
       this._openPopup();
@@ -80,32 +86,37 @@ export default class FilmController {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
+    // Закрытие попапа
 
     this._popupComponent.setCloseButtonClick(() => {
       this._closePopup(film);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
+    // Обработчики клика по кнопкам добавления категорий
+
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInWatchlist: !film.isInWatchlist,
-      }), this._typeFilm);
+      }));
     });
 
     this._filmComponent.setHistoryButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInHistory: !film.isInHistory,
-      }), this._typeFilm);
+      }));
     });
 
     this._filmComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(film, Object.assign({}, film, {
         isInFavorites: !film.isInFavorites,
-      }), this._typeFilm);
+      }));
     });
+
+    // Замена старых компонент на новые
 
     if (oldFilmComponent && oldPopupComponent) {
       replace(this._filmComponent, oldFilmComponent);

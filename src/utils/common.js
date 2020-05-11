@@ -2,7 +2,13 @@
 import moment from "moment";
 
 const transformTimeFormat = (filmTime) => {
-  return moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`h[h] mm[m]`);
+  if (filmTime) {
+    const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
+    return t;
+  } else {
+    return `0h 0m`
+  }
+  
 };
 
 const getRandomDate = (from, to) => {
@@ -61,11 +67,22 @@ const getUserRating = (arr) => {
     userRating = `Novice`;
   } else if (watchedMoviesQuantity > 10 && watchedMoviesQuantity <= 20) {
     userRating = `Fan`;
-  } else if (watchedMoviesQuantity > 21) {
+  } else if (watchedMoviesQuantity > 20) {
     userRating = `Movie Buff`;
   }
   return userRating;
 };
 
+const getGenreStatistics = (arr) => {
+  let genres = arr
+      .filter((movie) => movie.isInHistory)
+      .map(({genre}) => genre)
+      .flat();
+
+  return genres.reduce((acc, rec, index) => {
+    return (typeof acc[rec] !== 'undefined') ? { ...acc, [rec]: acc[rec] + 1 } : { ...acc, [rec]: 1 }
+  }, {})
+};
+
 export {transformTimeFormat, getFavoriteGenre, getUserRating, getRandomDate, getRandomArrayItem,
-  getRandomNumber, getRandomFractionalNumber, makeRandomArr, getArrayFromText};
+  getRandomNumber, getRandomFractionalNumber, makeRandomArr, getArrayFromText, getGenreStatistics};

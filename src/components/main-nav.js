@@ -1,33 +1,64 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const createNavItem = (name, count) => {
+const createNavItem = (filter) => {
+  const {name, count, checked} = filter;
+
   return (
-    `<a href="#${name.toLowerCase()}" class="main-navigation__item">${name} <span class="main-navigation__item-count">${count}</span></a>`
+    `<a href="#${name}" id = "${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name} ${name === `All movies` ? `` : `<span class="main-navigation__item-count">${count}</span>`}</a>`
   );
 };
 
 const createMainMenuTemplate = (filters) => {
 
-  const navItems = filters.map((it) => createNavItem(it.name, it.count)).join(`\n`);
+  const navItems = filters.map((it) => createNavItem(it)).join(`\n`);
 
   return (
     `<nav class="main-navigation">
           <div class="main-navigation__items">
-            <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
             ${navItems}
           </div>
-          <a href="#stats" class="main-navigation__additional">Stats</a>
+          <a href="#stats" id = "Stats" class="main-navigation__additional">Stats</a>
         </nav>`
   );
 };
 
-export default class MainNav extends AbstractComponent {
+export default class MainNav extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+    this._filterChangeHandler = null;
+    this._statChangeHandler = null;
   }
 
   getTemplate() {
     return createMainMenuTemplate(this._filters);
+  }
+
+  recoveryListeners() {
+    this.setFilterChangeHandler(this._filterChangeHandler);
+    this.setStatChangeHandler(this._statChangeHandler);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  setStatChangeHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+      this._statChangeHandler = handler;
+    });
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((it) => {
+      it.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        const filterName = evt.target.id;
+        handler(filterName);
+        this._filterChangeHandler = handler;
+      });
+    });
   }
 }
