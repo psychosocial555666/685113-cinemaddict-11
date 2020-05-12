@@ -1,3 +1,5 @@
+
+import API from "./api.js";
 import FilmsComponent from "./components/films";
 import FilmsModel from "./models/films.js";
 import FilterController from "./controllers/filter.js";
@@ -7,15 +9,13 @@ import StatisticsSectionComponent from "./components/statistics-section";
 import StatisticsComponent from "./components/statistics";
 import PageController from "./controllers/page.js";
 
-import {generateFilms} from "./mock/film";
-
 import {render} from "./utils/render.js";
 
-const CARDS_COUNT = 24;
+const AUTHORIZATION = `Basic eo0w666ik66689a`;
 
-const films = generateFilms(CARDS_COUNT);
+const api = new API(AUTHORIZATION);
+
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -29,7 +29,7 @@ const statisticsSectionComponent = new StatisticsSectionComponent(filmsModel.get
 render(mainContainer, statisticsSectionComponent.getElement());
 statisticsSectionComponent.hide();
 
-const statisticsComponent = new StatisticsComponent(films.length);
+const statisticsComponent = new StatisticsComponent(filmsModel.getFilms().length);
 render(footerStaticticsContainer, statisticsComponent.getElement());
 
 const filmsComponent = new FilmsComponent();
@@ -40,10 +40,14 @@ const filterController = new FilterController(mainContainer, filmsModel, pageCon
 filterController.render();
 
 
-if (films.length === 0) {
-  render(mainContainer, new NoFilmsComponent().getElement());
-} else {
-  render(mainContainer, filmsComponent.getElement());
-  pageController.render();
-}
+api.getFilms()
+  .then((films) => {
+    if (films.length === 0) {
+      render(mainContainer, new NoFilmsComponent().getElement());
+    } else {
+      filmsModel.setFilms(films);
+      render(mainContainer, filmsComponent.getElement());
+      pageController.render();
+    }
+  });
 
