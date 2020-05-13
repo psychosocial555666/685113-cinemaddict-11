@@ -1,10 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import moment from "moment";
-import {encode} from "he";
+// import {encode} from "he";
 
 const createCommentsTemplate = (film) => {
-
-  const commentItems = film.comments.map((it) => createCommentItem(it.smile, it.author, encode(it.text), it.date, it.id)).join(`\n`);
+  const commentItems = film.comments.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
   let emotionImage = ``;
 
   if (film.emotion) {
@@ -79,7 +78,7 @@ const createEmotionMarkup = (emotion) => {
 };
 
 
-export default class Comments extends AbstractSmartComponent {
+export default class CommentsComponent extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
