@@ -9,11 +9,23 @@ export default class Comment {
     this.smile = data[`emotion`];
   }
 
+  toRAW() {
+    return {
+      "comment": this.text,
+      "date": this.date,
+      "emotion": this.smile
+    };
+  }
+
   static parseComment(data) {
     return new Comment(data);
   }
 
   static parseComments(data) {
     return data.map(Comment.parseComment);
+  }
+
+  static clone(data) {
+    return new Comment(data.toRAW());
   }
 }

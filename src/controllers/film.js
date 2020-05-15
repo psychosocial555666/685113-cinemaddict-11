@@ -1,5 +1,6 @@
 import FilmComponent from "../components/film-card";
 import PopupComponent from "../components/popup";
+import FilmModel from "../models/film.js";
 
 
 import {render, replace, remove} from "../utils/render.js";
@@ -97,26 +98,37 @@ export default class FilmController {
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(film, Object.assign({}, film, {
-        isInWatchlist: !film.isInWatchlist,
-      }));
+      // this._onDataChange(film, Object.assign({}, film, {
+      //   isInWatchlist: !film.isInWatchlist,
+      // }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isInWatchlist = !newFilm.isInWatchlist;
+
+      this._onDataChange(film, newFilm);
     });
 
     this._filmComponent.setHistoryButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(film, Object.assign({}, film, {
-        isInHistory: !film.isInHistory,
-      }));
+      // this._onDataChange(film, Object.assign({}, film, {
+      //   isInHistory: !film.isInHistory,
+      // }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isInHistory = !newFilm.isInHistory;
+
+      this._onDataChange(film, newFilm);
     });
 
     this._filmComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(film, Object.assign({}, film, {
-        isInFavorites: !film.isInFavorites,
-      }));
+      // this._onDataChange(film, Object.assign({}, film, {
+      //   isInFavorites: !film.isInFavorites,
+      // }));
+      const newFilm = FilmModel.clone(film);
+      newFilm.isInFavorites = !newFilm.isInFavorites;
+
+      this._onDataChange(film, newFilm);
     });
 
-    // Замена старых компонент на новые
 
     if (oldFilmComponent && oldPopupComponent) {
       replace(this._filmComponent, oldFilmComponent);

@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import moment from "moment";
-// import {encode} from "he";
+import api from "./../api.js";
 
 const createCommentsTemplate = (film) => {
   const commentItems = film.comments.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
@@ -77,12 +77,22 @@ const createEmotionMarkup = (emotion) => {
   );
 };
 
-
 export default class CommentsComponent extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._subscribeOnEvents();
+    this._initialized = false;
+  }
+
+  getComments() {
+    return this._initialized ? Promise.resolve() : new Promise((res) => {
+      api.getComments(this._film .id).then((data) => {
+        this._film.comments = data;
+        this._subscribeOnEvents();
+        this._initialized = true;
+        res();
+      });
+    });
   }
 
   recoveryListeners() {

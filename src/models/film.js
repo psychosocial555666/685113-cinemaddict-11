@@ -1,7 +1,4 @@
 import moment from "moment";
-import Comments from "./comments.js";
-
-const AUTHORIZATION = `Basic eo0w666ik66689a`;
 
 export default class Film {
   constructor(data) {
@@ -19,24 +16,44 @@ export default class Film {
     this.writers = data.film_info[`writers`];
     this.director = data.film_info[`director`];
     this.release = moment(data.film_info[`date`]).format(`DD[ ]MMMM`);
+    this.releaseFull = moment(data.film_info.release[`date`]);
     this.country = data.film_info.release[`release_country`];
-    this.watchingDate = data.user_details[`watching_date`];
-
+    this.watchingDate = moment(data.user_details[`watching_date`]);
     this.isInWatchlist = Boolean(data.user_details[`watchlist`]);
     this.isInHistory = Boolean(data.user_details[`already_watched`]);
     this.isInFavorites = Boolean(data.user_details[`favorite`]);
-    this.commentsID = data[`comments`];
     this.emotion = ``;
-    this.comments = this.getComments(data[`id`]);
+    this.comments = data[`comments`];
   }
 
-  getComments(id) {
-    const headers = new Headers();
-    headers.append(`Authorization`, AUTHORIZATION);
-
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`, {headers})
-      .then((response) => response.json())
-      .then(Comments.parseComments);
+  toRAW() {
+    return {
+      "id": this.id,
+      "comments": this.comments,
+      "film_info": {
+        "title": this.title,
+        "alternative_title": this.alternativeTitle,
+        "total_rating": this.rating,
+        "poster": this.url,
+        "age_rating": this.age,
+        "director": this.director,
+        "writers": this.writers,
+        "actors": this.actors,
+        "release": {
+          "date": this.releaseFull,
+          "release_country": this.country
+        },
+        "runtime": this.duration,
+        "genre": this.genre,
+        "description": this.description
+      },
+      "user_details": {
+        "watchlist": this.isInWatchlist,
+        "already_watched": this.isInHistory,
+        "watching_date": this.watchingDate,
+        "favorite": this.isInFavorites
+      }
+    };
   }
 
   static parseFilm(data) {
@@ -45,5 +62,9 @@ export default class Film {
 
   static parseFilms(data) {
     return data.map(Film.parseFilm);
+  }
+
+  static clone(data) {
+    return new Film(data.toRAW());
   }
 }

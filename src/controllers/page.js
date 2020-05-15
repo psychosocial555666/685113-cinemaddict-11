@@ -3,16 +3,20 @@ import ShowMoreComponent from "../components/show-more";
 import SortComponent, {SortType} from "../components/sort";
 import FilmController from "./film.js";
 import ProfileComponent from "../components/profile";
-// import StatisticsSectionComponent from "../components/statistics-section";
+import StatisticsSectionComponent from "../components/statistics-section";
+import StatisticsComponent from "../components/statistics";
+import FilterController from "./filter.js";
+
 
 import {render, remove, RenderPosition} from "../utils/render.js";
-
-const headerContainer = document.querySelector(`.header`);
-// const mainContainer = document.querySelector(`.main`);
 
 const CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_ON_START = 5;
 const SHOWING_CARDS_ON_BUTTON_CLICK = 5;
+
+const headerContainer = document.querySelector(`.header`);
+const mainContainer = document.querySelector(`.main`);
+const footerStaticticsContainer = document.querySelector(`.footer__statistics`);
 
 
 const getSortedFilms = (filmsArray, sortType, from, to) => {
@@ -35,14 +39,17 @@ const getSortedFilms = (filmsArray, sortType, from, to) => {
 
 
 export default class PageController {
-  constructor(container, filmsModel, profileComponent, statisticsSectionComponent) {
+  constructor(container, filmsModel, api) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._profileComponent = profileComponent;
-    this._statisticsSectionComponent = statisticsSectionComponent;
+    this._api = api;
 
     this._showMoreComponent = new ShowMoreComponent();
     this._sortComponent = new SortComponent();
+    this._profileComponent = null;
+    this._statisticsSectionComponent = null;
+    this._statisticsComponent = null;
+    this._filterController = null;
 
     this._renderFilms = this._renderFilms.bind(this);
     this._renderShowMoreButton = this._renderShowMoreButton.bind(this);
@@ -82,7 +89,18 @@ export default class PageController {
   render() {
     const films = this._filmsModel.getFilms();
 
+    this._profileComponent = new ProfileComponent(this._filmsModel.getFilms());
+    this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
+    this._statisticsComponent = new StatisticsComponent(this._filmsModel.getFilms().length);
+    this._filterController = new FilterController(mainContainer, this._filmsModel, this, this._statisticsSectionComponent);
+
     render(this._container.getElement(), this._sortComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(headerContainer, this._profileComponent.getElement());
+    render(mainContainer, this._statisticsSectionComponent.getElement());
+    this._statisticsSectionComponent.hide();
+    render(footerStaticticsContainer, this._statisticsComponent.getElement());
+
+    this._filterController.render();
 
     this._topRatedFilms = films.slice(0, films.length).sort((a, b) => (b.rating - a.rating)).slice(0, CARDS_EXTRA_COUNT);
     this._mostComenetdFilms = films.slice(0, films.length).sort((a, b) => (b.comments.length - a.comments.length)).slice(0, CARDS_EXTRA_COUNT);
@@ -150,29 +168,41 @@ export default class PageController {
     const showedController = this._showedFilmControllers.find((film) => film._filmComponent._film === oldData);
     const ratedController = this._topRatedFilmsControllers.find((film) => film._filmComponent._film === oldData);
     const commentedController = this._mostComenetdFilmsControllers.find((film) => film._filmComponent._film === oldData);
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
 
-    if (isSuccess) {
-      if (showedController) {
-        showedController.render(newData);
-      }
-      if (ratedController) {
-        ratedController.render(newData);
-      }
-      if (commentedController) {
-        commentedController.render(newData);
-      }
-    }
+
+    this._api.updateFilm(oldData.id, newData)
+        .then((filmModel) => {
+          const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+
+          if (isSuccess) {
+            if (showedController) {
+              showedController.render(newData);
+            }
+            if (ratedController) {
+              ratedController.render(newData);
+            }
+            if (commentedController) {
+              commentedController.render(newData);
+            }
+          }
+        });
+
     remove(this._profileComponent);
     this._profileComponent.removeElement();
     this._profileComponent = new ProfileComponent(this._filmsModel.getFilms());
     render(headerContainer, this._profileComponent.getElement());
 
-    // remove(this._statisticsSectionComponent);
-    // this._statisticsSectionComponent.removeElement();
-    // this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
-    // render(mainContainer, this._statisticsSectionComponent.getElement());
-    // this._statisticsSectionComponent.hide();
+    remove(this._statisticsSectionComponent);
+    this._statisticsSectionComponent.removeElement();
+    this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
+    render(mainContainer, this._statisticsSectionComponent.getElement());
+    this._statisticsSectionComponent.hide();
+
+    this._filterController.destroy();
+    this._filterController = null;
+    this._filterController = new FilterController(mainContainer, this._filmsModel, this, this._statisticsSectionComponent);
+    this._filterController.render();
+
   }
 
 

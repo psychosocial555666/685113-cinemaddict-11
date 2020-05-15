@@ -1,5 +1,5 @@
 import FilterComponent from "../components/main-nav.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+import {render, replace, remove, RenderPosition} from "../utils/render.js";
 import {getfilmsByFilter} from "../utils/filter.js";
 
 export const FilterType = {
@@ -90,6 +90,10 @@ export default class FilterController {
 
   _onDataChange() {
     this.render();
+  }
+
+  destroy() {
+    remove(this._filterComponent);
   }
 
   recoveryFilterListener() {
