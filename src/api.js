@@ -2,6 +2,14 @@ import Film from "./models/film.js";
 import Comments from "./models/comments";
 
 const AUTHORIZATION = `Basic eo0w666ik66689a`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
+const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -12,45 +20,60 @@ const checkStatus = (response) => {
 };
 
 const API = class {
-  constructor(authorization) {
+  constructor(authorization, endPoint) {
+    this._endPoint = endPoint;
     this._authorization = authorization;
   }
 
   getComments(id) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`, {headers})
-      .then(checkStatus)
+    return this._load({url: `comments/${id}`})
       .then((response) => response.json())
       .then(Comments.parseComments);
   }
 
   getFilms() {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
-      .then(checkStatus)
+    return this._load({url: `movies`})
       .then((response) => response.json())
       .then(Film.parseFilms);
   }
 
   updateFilm(id, data) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
-
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
-      method: `PUT`,
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
-      headers,
+      headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilm);
   }
+
+  deleteComment(id) {
+    return this._load({url: `comments/${id}`, method: Method.DELETE});
+  }
+
+  createComment(comment, id) {
+
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.POST,
+      body: JSON.stringify(comment.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Comments.parseComment);
+  }
+
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(checkStatus)
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
-const api = new API(AUTHORIZATION);
+const api = new API(AUTHORIZATION, END_POINT);
 
 export default api;

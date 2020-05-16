@@ -4,6 +4,7 @@ import FilmModel from "../models/film.js";
 
 
 import {render, replace, remove} from "../utils/render.js";
+import moment from "moment";
 
 const Mode = {
   DEFAULT: `default`,
@@ -34,11 +35,13 @@ export default class FilmController {
   }
 
   _closePopup(film) {
-    this._onDataChange(film, Object.assign({}, film, {
-      isInHistory: this._popupComponent._isInHistory,
-      isInFavorites: this._popupComponent._isInFavorites,
-      isInWatchlist: this._popupComponent._isInWatchlist
-    }));
+
+    const newFilm = FilmModel.clone(film);
+    newFilm.isInHistory = this._popupComponent._isInHistory;
+    newFilm.isInFavorites = this._popupComponent._isInFavorites;
+    newFilm.isInWatchlist = this._popupComponent._isInWatchlist;
+
+    this._onDataChange(film, newFilm);
     bodyContainer.removeChild(this._popupComponent.getElement());
     this._mode = Mode.DEFAULT;
   }
@@ -50,13 +53,13 @@ export default class FilmController {
   }
 
   destroy() {
-    remove(this._popupComponent);
+    // remove(this._popupComponent);
     remove(this._filmComponent);
   }
 
   render(film) {
     const oldFilmComponent = this._filmComponent;
-    const oldPopupComponent = this._popupComponent;
+    // const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
     this._popupComponent = new PopupComponent(film, this._filmsModel);
@@ -98,9 +101,6 @@ export default class FilmController {
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      // this._onDataChange(film, Object.assign({}, film, {
-      //   isInWatchlist: !film.isInWatchlist,
-      // }));
       const newFilm = FilmModel.clone(film);
       newFilm.isInWatchlist = !newFilm.isInWatchlist;
 
@@ -109,20 +109,15 @@ export default class FilmController {
 
     this._filmComponent.setHistoryButtonClickHandler((evt) => {
       evt.preventDefault();
-      // this._onDataChange(film, Object.assign({}, film, {
-      //   isInHistory: !film.isInHistory,
-      // }));
       const newFilm = FilmModel.clone(film);
       newFilm.isInHistory = !newFilm.isInHistory;
+      newFilm.watchingDate = moment();
 
       this._onDataChange(film, newFilm);
     });
 
     this._filmComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
-      // this._onDataChange(film, Object.assign({}, film, {
-      //   isInFavorites: !film.isInFavorites,
-      // }));
       const newFilm = FilmModel.clone(film);
       newFilm.isInFavorites = !newFilm.isInFavorites;
 
@@ -130,9 +125,8 @@ export default class FilmController {
     });
 
 
-    if (oldFilmComponent && oldPopupComponent) {
+    if (oldFilmComponent) {
       replace(this._filmComponent, oldFilmComponent);
-      replace(this._popupComponent, oldPopupComponent);
     } else {
       render(this._container, this._filmComponent .getElement());
     }

@@ -1,9 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import moment from "moment";
+import CommentsModel from "../models/comments";
 import api from "./../api.js";
 
 const createCommentsTemplate = (film) => {
-  const commentItems = film.comments.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
+  const commentItems = film.commentsAll.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
   let emotionImage = ``;
 
   if (film.emotion) {
@@ -11,7 +12,7 @@ const createCommentsTemplate = (film) => {
   }
 
   return `<section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.commentsAll.length}</span></h3>
 
             <ul class="film-details__comments-list">
               ${commentItems}
@@ -63,7 +64,7 @@ const createCommentItem = (smile, author, text, date, id) => {
           <p class="film-details__comment-text">${text}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${date}</span>
+            <span class="film-details__comment-day">${moment(date).calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -87,7 +88,7 @@ export default class CommentsComponent extends AbstractSmartComponent {
   getComments() {
     return this._initialized ? Promise.resolve() : new Promise((res) => {
       api.getComments(this._film .id).then((data) => {
-        this._film.comments = data;
+        this._film.commentsAll = data;
         this._subscribeOnEvents();
         this._initialized = true;
         res();
@@ -127,24 +128,28 @@ export default class CommentsComponent extends AbstractSmartComponent {
 
   _onDataChange(oldData, newData) {
     if (oldData === null) {
-      const text = newData.get(`comment`);
-      const smile = newData.get(`comment-emoji`);
-      if (text && smile) {
-        const comment = {
-          id: String((new Date()).valueOf() + Math.random()),
-          text, smile,
-          date: `${moment().calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}`,
-          author: `Random author`
+      const comment = newData.get(`comment`);
+      const emotion = newData.get(`comment-emoji`);
+      if (comment && emotion) {
+        const commentItem = {
+          comment, emotion,
+          date: new Date().toISOString(),
         };
-        this._film.comments.push(comment);
-        this.rerender();
+        const newComment = CommentsModel.clone(commentItem);
+        api.createComment(newComment, this._film.id)
+        .then(this.rerender());
       }
     } else if (newData === null) {
-      const index = this._film.comments.indexOf(this._film.comments.find((comment) => comment.id === oldData.id));
+      const deletingComment = this._film.commentsAll.find((comment) => comment.id === oldData.id);
+      const index = this._film.commentsAll.indexOf(deletingComment);
+      const idIndex = this._film.comments.indexOf(this._film.comments.find((comment) => comment === oldData.id));
+
       if (index > -1) {
-        this._film.comments = [...this._film.comments.slice(0, index), ...this._film.comments.slice(index + 1)];
-        this.rerender();
+        this._film.commentsAll = [...this._film.commentsAll.slice(0, index), ...this._film.commentsAll.slice(index + 1)];
+        this._film.comments = [...this._film.comments.slice(0, idIndex), ...this._film.comments.slice(idIndex + 1)];
       }
+      api.deleteComment(deletingComment.id)
+      .then(this.rerender());
     }
   }
 

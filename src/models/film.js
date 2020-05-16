@@ -24,6 +24,7 @@ export default class Film {
     this.isInFavorites = Boolean(data.user_details[`favorite`]);
     this.emotion = ``;
     this.comments = data[`comments`];
+    this.commentsAll = [];
   }
 
   toRAW() {

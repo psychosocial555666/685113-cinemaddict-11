@@ -144,9 +144,6 @@ export default class Popup extends AbstractSmartComponent {
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
-  rerender() {
-    super.rerender();
-  }
 
   _subscribeOnEvents() {
     const element = this.getPopElement();

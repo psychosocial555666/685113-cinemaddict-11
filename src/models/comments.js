@@ -1,11 +1,10 @@
-import moment from "moment";
 
 export default class Comment {
   constructor(data) {
     this.id = data[`id`];
     this.author = data[`author`];
     this.text = data[`comment`];
-    this.date = `${moment(data[`date`]).calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}`;
+    this.date = data[`date`];
     this.smile = data[`emotion`];
   }
 
@@ -17,15 +16,15 @@ export default class Comment {
     };
   }
 
-  static parseComment(data) {
-    return new Comment(data);
+  static parseComment(comment) {
+    return new Comment(comment);
   }
 
-  static parseComments(data) {
-    return data.map(Comment.parseComment);
+  static parseComments(comment) {
+    return comment.map(Comment.parseComment);
   }
 
-  static clone(data) {
-    return new Comment(data.toRAW());
+  static clone(comment) {
+    return new Comment(comment);
   }
 }

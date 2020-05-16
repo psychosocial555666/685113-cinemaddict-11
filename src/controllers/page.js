@@ -185,23 +185,22 @@ export default class PageController {
               commentedController.render(newData);
             }
           }
+          remove(this._profileComponent);
+          this._profileComponent.removeElement();
+          this._profileComponent = new ProfileComponent(this._filmsModel.getFilms());
+          render(headerContainer, this._profileComponent.getElement());
+
+          remove(this._statisticsSectionComponent);
+          this._statisticsSectionComponent.removeElement();
+          this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
+          render(mainContainer, this._statisticsSectionComponent.getElement());
+          this._statisticsSectionComponent.hide();
+
+          this._filterController.destroy();
+          this._filterController = null;
+          this._filterController = new FilterController(mainContainer, this._filmsModel, this, this._statisticsSectionComponent);
+          this._filterController.render();
         });
-
-    remove(this._profileComponent);
-    this._profileComponent.removeElement();
-    this._profileComponent = new ProfileComponent(this._filmsModel.getFilms());
-    render(headerContainer, this._profileComponent.getElement());
-
-    remove(this._statisticsSectionComponent);
-    this._statisticsSectionComponent.removeElement();
-    this._statisticsSectionComponent = new StatisticsSectionComponent(this._filmsModel.getFilms());
-    render(mainContainer, this._statisticsSectionComponent.getElement());
-    this._statisticsSectionComponent.hide();
-
-    this._filterController.destroy();
-    this._filterController = null;
-    this._filterController = new FilterController(mainContainer, this._filmsModel, this, this._statisticsSectionComponent);
-    this._filterController.render();
 
   }
 
