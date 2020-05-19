@@ -10,6 +10,8 @@ export default class Comment {
 
   toRAW() {
     return {
+      "id": this.id,
+      "author": this.author,
       "comment": this.text,
       "date": this.date,
       "emotion": this.smile
@@ -25,6 +27,6 @@ export default class Comment {
   }
 
   static clone(comment) {
-    return new Comment(comment);
+    return new Comment(comment.toRAW());
   }
 }

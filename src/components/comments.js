@@ -144,7 +144,7 @@ export default class CommentsComponent extends AbstractSmartComponent {
           comment, emotion,
           date: new Date().toISOString(),
         };
-        const newComment = CommentsModel.clone(commentItem);
+        const newComment = CommentsModel.parseComment(commentItem);
 
         this._api.createComment(newComment, this._film.id)
         .then((data) => {
