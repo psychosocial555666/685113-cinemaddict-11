@@ -105,13 +105,14 @@ const createPopupTemplate = (film) => {
 };
 
 export default class Popup extends AbstractSmartComponent {
-  constructor(film, filmsModel) {
+  constructor(film, filmsModel, api) {
     super();
     this._film = film;
+    this._api = api;
     this._filmsModel = filmsModel;
     this._closeButtonHandler = null;
     this._deleteButtonClickHandler = null;
-    this._comments = new CommentsComponent(film, this._onDataChange);
+    this._comments = new CommentsComponent(film, this._api);
 
     this._subscribeOnEvents();
 

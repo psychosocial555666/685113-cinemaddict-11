@@ -3,6 +3,7 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 import {getUserRating, getFavoriteGenre, getGenreStatistics} from "../utils/common.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {render, createElement} from "../utils/render.js";
 
 const StatisticFilter = {
   ALL: `all-time`,
@@ -91,12 +92,31 @@ const getFiltredFilmsByWatchDate = (films, numberOfDays) => {
   return filtredFilms;
 };
 
-const createStatisticsSectionTemplate = (films) => {
+const createStatsTemplate = (films) => {
   const durations = films.map((it) => it.duration);
-  const rating = getUserRating(films);
   const totalMovies = films.length;
   const totalDuration = films.length > 0 ? durations.reduce((a, b) => a + b) : ``;
-  const topGenre = films.length > 0 ? getFavoriteGenre(films) : ``;
+  const topGenre = films.length > 0 ? getFavoriteGenre(films) : `None`;
+  return (
+    `<ul class="statistic__text-list"> 
+    <li class="statistic__text-item">
+        <h4 class="statistic__item-title">You watched</h4>
+        <p class="statistic__item-text">${totalMovies} <span class="statistic__item-description">movies</span></p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Total duration</h4>
+        <p class="statistic__item-text">${transformTimeFormat(totalDuration)}</p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Top genre</h4>
+        <p class="statistic__item-text">${topGenre}</p>
+      </li>
+      </ul>`
+  );
+};
+
+const createStatisticsSectionTemplate = (films) => {
+  const rating = getUserRating(films);
   const avatar = `images/bitmap@2x.png`;
 
   return (
@@ -126,20 +146,9 @@ const createStatisticsSectionTemplate = (films) => {
         <label for="statistic-year" class="statistic__filters-label">Year</label>
       </form>
   
-      <ul class="statistic__text-list">
-        <li class="statistic__text-item">
-          <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">${totalMovies} <span class="statistic__item-description">movies</span></p>
-        </li>
-        <li class="statistic__text-item">
-          <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">${transformTimeFormat(totalDuration)}</p>
-        </li>
-        <li class="statistic__text-item">
-          <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">${topGenre}</p>
-        </li>
-      </ul>
+      <div class="stats__container">
+
+      </div>
   
       <div class="statistic__chart-wrap">
         <canvas class="statistic__chart" width="1000"></canvas>
@@ -159,14 +168,29 @@ export default class StatisticsSection extends AbstractSmartComponent {
     this._watchedMoviesByMonth = getFiltredFilmsByWatchDate(this._watchedMovies, 30);
     this._watchedMoviesByYear = getFiltredFilmsByWatchDate(this._watchedMovies, 365);
     this._genreChart = null;
+    this._statsElement = null;
 
     this._renderCharts(this._watchedMovies);
+    this._renderStats(this._watchedMovies);
     this.recoveryListeners();
   }
 
   getTemplate() {
     return createStatisticsSectionTemplate(this._watchedMovies);
   }
+
+  getStatsTemplate(films) {
+    return createStatsTemplate(films);
+  }
+
+  getStatsElement(films) {
+    if (!this._statsElement) {
+      this._statsElement = createElement(this.getStatsTemplate(films));
+    }
+
+    return this._statsElement;
+  }
+
 
   show() {
     super.show();
@@ -180,18 +204,23 @@ export default class StatisticsSection extends AbstractSmartComponent {
         switch (statisticFilter) {
           case StatisticFilter.ALL:
             this._renderCharts(this._watchedMoviesByAllTime);
+            this._renderStats(this._watchedMoviesByAllTime);
             break;
           case StatisticFilter.TODAY:
             this._renderCharts(this._watchedMoviesByDay);
+            this._renderStats(this._watchedMoviesByDay);
             break;
           case StatisticFilter.WEEK:
             this._renderCharts(this._watchedMoviesByWeek);
+            this._renderStats(this._watchedMoviesByWeek);
             break;
           case StatisticFilter.MONTH:
             this._renderCharts(this._watchedMoviesByMonth);
+            this._renderStats(this._watchedMoviesByMonth);
             break;
           case StatisticFilter.YEAR:
             this._renderCharts(this._watchedMoviesByYear);
+            this._renderStats(this._watchedMoviesByYear);
             break;
         }
       });
@@ -207,6 +236,8 @@ export default class StatisticsSection extends AbstractSmartComponent {
 
     this._resetCharts();
 
+    this._statsElement = null;
+
     this._genreChart = renderGenresChart(statisticsCtx, films);
   }
 
@@ -215,5 +246,17 @@ export default class StatisticsSection extends AbstractSmartComponent {
       this._genreChart.destroy();
       this._genreChart = null;
     }
+  }
+
+  _renderStats(films) {
+
+    const element = this.getElement();
+
+    const statsContainer = element.querySelector(`.stats__container`);
+
+    statsContainer.innerHTML = ``;
+
+    render(statsContainer, this.getStatsElement(films));
+
   }
 }
