@@ -1,4 +1,4 @@
-import {transformTimeFormat, getRandomDate} from "../utils/common.js";
+import {transformTimeFormat} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {getUserRating, getFavoriteGenre, getGenreStatistics} from "../utils/common.js";
 import Chart from "chart.js";
@@ -84,16 +84,9 @@ const renderGenresChart = (statisticCtx, films) => {
   });
 };
 
-const setTimeMark = (films) => {
-  films.forEach((film) => {
-    Object.assign(film, {watchingDate: getRandomDate(0, 500)});
-  });
-  return films;
-};
-
 const getFiltredFilmsByWatchDate = (films, numberOfDays) => {
   const filtredFilms = films.slice(0, films.length).filter((film) => {
-    return (Math.floor((new Date() - film.watchingDate) / 86400000)) < numberOfDays;
+    return (Math.floor((new Date() - film.watchingDate) / 8640000)) < numberOfDays;
   });
   return filtredFilms;
 };
@@ -159,7 +152,7 @@ export default class StatisticsSection extends AbstractSmartComponent {
     super();
     this._films = films;
 
-    this._watchedMovies = setTimeMark(this._films.filter((it)=> it.isInHistory));
+    this._watchedMovies = this._films.filter((it)=> it.isInHistory);
     this._watchedMoviesByAllTime = this._watchedMovies;
     this._watchedMoviesByDay = getFiltredFilmsByWatchDate(this._watchedMovies, 1);
     this._watchedMoviesByWeek = getFiltredFilmsByWatchDate(this._watchedMovies, 7);

@@ -36,7 +36,7 @@ const createPopupTemplate = (film) => {
                 <div class="film-details__poster">
                   <img class="film-details__poster-img" src=${url} alt="">
 
-                  <p class="film-details__age">${age}</p>
+                  <p class="film-details__age">${age}+</p>
                 </div>
 
                 <div class="film-details__info">
@@ -124,11 +124,17 @@ export default class Popup extends AbstractSmartComponent {
     return createPopupTemplate(this._film);
   }
 
-  getElement() {
+  getPopElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
-      render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN);
     }
+    return this._element;
+  }
+
+  getElement() {
+    this.getPopElement();
+    this._comments.getComments()
+      .then(() => render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN));
     return this._element;
   }
 
@@ -138,12 +144,9 @@ export default class Popup extends AbstractSmartComponent {
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
-  rerender() {
-    super.rerender();
-  }
 
   _subscribeOnEvents() {
-    const element = this.getElement();
+    const element = this.getPopElement();
 
     element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, () => {
       this._isInWatchlist = !this._isInWatchlist;
@@ -157,7 +160,7 @@ export default class Popup extends AbstractSmartComponent {
   }
 
   setCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`)
+    this.getPopElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
     this._closeButtonHandler = handler;
   }

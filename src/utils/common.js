@@ -55,9 +55,13 @@ const getFavoriteGenre = (arr) => {
         obj[genre] = obj[genre] ? ++obj[genre] : 1;
         return obj;
       }, {});
-  const arrGenres = Object.entries(genres).sort((a, b) => b[1] - a[1]);
-  const maxGenre = arrGenres[0][1];
-  return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
+      if (Object.keys(genres).length > 0) {
+        const arrGenres = Object.entries(genres).sort((a, b) => b[1] - a[1]);
+        const maxGenre = arrGenres[0][1];
+        return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
+      } else {
+        return `None`
+      }
 };
 
 const getUserRating = (arr) => {
