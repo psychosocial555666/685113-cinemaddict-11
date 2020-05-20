@@ -1,17 +1,17 @@
 import Film from "../models/film";
 import Comments from "../models/comments";
-import {nanoid} from "nanoid";
+// import {nanoid} from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;
 };
+//
+// const getSyncedFilms = (items) => {
 
-const getSyncedFilms = (items) => {
+//   return items.filter(({success}) => success)
+//       .map(({payload}) => payload.film);
 
-  return items.filter(({success}) => success)
-      .map(({payload}) => payload.film);
-
-};
+// };
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
@@ -79,39 +79,12 @@ export default class Provider {
     return Promise.resolve(localFilm);
   }
 
-  createComment(comment, filmId) {
-
-    if (isOnline()) {
-      return this._api.createComment(comment, filmId)
-      .then((newComment) => {
-        this._store.setItem(newComment.id, newComment.toRAW());
-
-        return newComment;
-      });
-    }
-
-    const localNewCommentId = nanoid();
-    const commentToClone = Object.assign(comment, {id: localNewCommentId}, {author: `You`});
-    const localNewComment = Comments.clone(commentToClone);
-
-    this._store.setItem(localNewComment.id, localNewComment.toRAW());
-
-    return Promise.resolve(localNewComment);
+  createComment(comment, id) {
+    return this._api.createComment(comment, id);
   }
 
   deleteComment(id) {
-
-    if (isOnline()) {
-      return this._api.deleteComment(id)
-        .then((data) => {
-          this._store.removeItem(id);
-          return data;
-        });
-    }
-
-    this._store.removeItem(id);
-
-    return Promise.resolve();
+    return this._api.deleteComment(id);
   }
 
   sync() {
@@ -120,13 +93,9 @@ export default class Provider {
 
       return this._api.sync(storeFilms)
         .then((response) => {
-          // Забираем из ответа синхронизированные задачи
-          const updatedFilms = getSyncedFilms(response.updated);
-          const createdComments = getSyncedFilms(response.created);
+          const updatedFilms = response.updated;
 
-          // Добавляем синхронизированные задачи в хранилище.
-          // Хранилище должно быть актуальным в любой момент.
-          const items = createStoreStructure([...createdComments, ...updatedFilms]);
+          const items = createStoreStructure([...updatedFilms]);
 
           this._store.setItems(items);
         });

@@ -1,4 +1,3 @@
-
 import api from "./api/index.js";
 import Provider from "./api/provider.js";
 import FilmsComponent from "./components/films";
@@ -9,7 +8,7 @@ import PageController from "./controllers/page.js";
 import Store from "./api/store.js";
 
 import {render, remove} from "./utils/render.js";
-const STORE_PREFIX = `taskmanager-localstorage`;
+const STORE_PREFIX = `cinemadict-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
@@ -35,6 +34,15 @@ apiWithProvider.getFilms()
       pageController.render();
     }
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+      .then(() => {
+        // Действие, в случае успешной регистрации ServiceWorker
+      }).catch(() => {
+        // Действие, в случае ошибки при регистрации ServiceWorker
+      });
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
