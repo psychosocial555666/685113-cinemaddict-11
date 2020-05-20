@@ -6,7 +6,6 @@ import ProfileComponent from "../components/profile";
 import StatisticsSectionComponent from "../components/statistics-section";
 import StatisticsComponent from "../components/statistics";
 import FilterController from "./filter.js";
-// import NoFilmsComponent from "../components/no-films";
 
 
 import {render, remove, RenderPosition} from "../utils/render.js";
@@ -108,8 +107,17 @@ export default class PageController {
 
     this._showedFilmControllers = this._showedFilmControllers.concat(this._renderFilms(this._filmsListContaner, films.slice(0, this._currentFilmsCount)));
 
-    this._mostComenetdFilmsControllers = this._renderFilms(this._filmsListCommentedContaner, this._mostComenetdFilms);
-    this._topRatedFilmsControllers = this._renderFilms(this._filmsListRatedContaner, this._topRatedFilms);
+    if (this._mostComenetdFilms.length === 0) {
+      this._filmsListExtra[0].innerHTML = ``;
+    } else {
+      this._mostComenetdFilmsControllers = this._renderFilms(this._filmsListCommentedContaner, this._mostComenetdFilms);
+    }
+
+    if (this._topRatedFilms.length === 0) {
+      this._filmsListExtra[1].innerHTML = ``;
+    } else {
+      this._topRatedFilmsControllers = this._renderFilms(this._filmsListRatedContaner, this._topRatedFilms);
+    }
 
     this._renderShowMoreButton();
   }

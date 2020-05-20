@@ -54,13 +54,11 @@ export default class FilmController {
   }
 
   destroy() {
-    // remove(this._popupComponent);
     remove(this._filmComponent);
   }
 
   render(film) {
     const oldFilmComponent = this._filmComponent;
-    // const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
     this._popupComponent = new PopupComponent(film, this._filmsModel, this._api);
@@ -73,8 +71,6 @@ export default class FilmController {
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
-
-    // Обработчики открытия попапа
 
     this._filmComponent.setPosterClickHandler(() => {
       this._openPopup();
@@ -91,14 +87,10 @@ export default class FilmController {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    // Закрытие попапа
-
     this._popupComponent.setCloseButtonClick(() => {
       this._closePopup(film);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-
-    // Обработчики клика по кнопкам добавления категорий
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();

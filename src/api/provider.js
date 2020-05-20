@@ -1,17 +1,9 @@
 import Film from "../models/film";
 import Comments from "../models/comments";
-// import {nanoid} from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;
 };
-//
-// const getSyncedFilms = (items) => {
-
-//   return items.filter(({success}) => success)
-//       .map(({payload}) => payload.film);
-
-// };
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
