@@ -14,11 +14,12 @@ const Mode = {
 const bodyContainer = document.querySelector(`body`);
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, filmsModel) {
+  constructor(container, onDataChange, onViewChange, filmsModel, api) {
     this._container = container;
     this._filmComponent = null;
     this._popupComponent = null;
     this._filmsModel = filmsModel;
+    this._api = api;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -62,7 +63,7 @@ export default class FilmController {
     // const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
-    this._popupComponent = new PopupComponent(film, this._filmsModel);
+    this._popupComponent = new PopupComponent(film, this._filmsModel, this._api);
 
     const onEscKeyDown = (evt) => {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;

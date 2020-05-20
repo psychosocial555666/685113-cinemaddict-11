@@ -1,7 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import moment from "moment";
 import CommentsModel from "../models/comments";
-import api from "./../api.js";
+// import api from "./../api.js";
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const createCommentsTemplate = (film) => {
   const commentItems = film.commentsAll.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
@@ -79,15 +81,17 @@ const createEmotionMarkup = (emotion) => {
 };
 
 export default class CommentsComponent extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, api) {
     super();
+    this._api = api;
     this._film = film;
     this._initialized = false;
+    this.shake = this.shake.bind(this);
   }
 
   getComments() {
     return this._initialized ? Promise.resolve() : new Promise((res) => {
-      api.getComments(this._film .id).then((data) => {
+      this._api.getComments(this._film .id).then((data) => {
         this._film.commentsAll = data;
         this._subscribeOnEvents();
         this._initialized = true;
@@ -107,6 +111,7 @@ export default class CommentsComponent extends AbstractSmartComponent {
     element.querySelectorAll(`.film-details__comment-delete`).forEach((it) => {
       it.addEventListener(`click`, (evt) => {
         evt.preventDefault();
+        evt.target.textContent = `Deleting...`;
         const id = evt.target.closest(`.film-details__comment`).dataset.id;
         this._onDataChange({id}, null);
       });
@@ -115,7 +120,7 @@ export default class CommentsComponent extends AbstractSmartComponent {
     form.addEventListener(`change`, (evt) => {
       if (evt.target.tagName === `INPUT`) {
         form.querySelector(`.film-details__add-emoji-label`)
-           .innerHTML = `<img src="./images/emoji/${evt.target.value}.png" width="30" height="30" alt="emoji">`;
+           .innerHTML = `<img src="./images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji">`;
       }
     }, false);
 
@@ -130,26 +135,57 @@ export default class CommentsComponent extends AbstractSmartComponent {
     if (oldData === null) {
       const comment = newData.get(`comment`);
       const emotion = newData.get(`comment-emoji`);
+
       if (comment && emotion) {
+        this._element.querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+        this._element.querySelector(`.film-details__comment-input`).style = `opacity: 0.5;`;
+
         const commentItem = {
           comment, emotion,
           date: new Date().toISOString(),
         };
-        const newComment = CommentsModel.clone(commentItem);
-        api.createComment(newComment, this._film.id)
-        .then(this.rerender());
+        const newComment = CommentsModel.parseComment(commentItem);
+
+        this._api.createComment(newComment, this._film.id)
+        .then((data) => {
+          this._element.querySelector(`.film-details__comment-input`).style = `opacity: 1;`;
+          this._element.querySelector(`.film-details__comment-input`).removeAttribute(`disabled`);
+
+          this._film.commentsAll.push(data);
+          this._film.comments.push(data.id);
+          this.rerender();
+        })
+        .catch(() => {
+          this.shake();
+          this._element.querySelector(`.film-details__comment-input`).removeAttribute(`disabled`);
+          this._element.querySelector(`.film-details__comment-input`).style = `opacity: 1;`;
+          this._element.querySelector(`.film-details__comment-input`).style = `box-shadow: 0px 0px 8px 2px #fb4626 inset;`;
+          setTimeout(() => {
+            this._element.querySelector(`.film-details__comment-input`).style = ``;
+          }, SHAKE_ANIMATION_TIMEOUT);
+        });
       }
     } else if (newData === null) {
       const deletingComment = this._film.commentsAll.find((comment) => comment.id === oldData.id);
       const index = this._film.commentsAll.indexOf(deletingComment);
       const idIndex = this._film.comments.indexOf(this._film.comments.find((comment) => comment === oldData.id));
 
-      if (index > -1) {
-        this._film.commentsAll = [...this._film.commentsAll.slice(0, index), ...this._film.commentsAll.slice(index + 1)];
-        this._film.comments = [...this._film.comments.slice(0, idIndex), ...this._film.comments.slice(idIndex + 1)];
-      }
-      api.deleteComment(deletingComment.id)
-      .then(this.rerender());
+      this._api.deleteComment(deletingComment.id)
+      .then((data) => {
+        if (data) {
+          if (index > -1) {
+            this._film.commentsAll = [...this._film.commentsAll.slice(0, index), ...this._film.commentsAll.slice(index + 1)];
+            this._film.comments = [...this._film.comments.slice(0, idIndex), ...this._film.comments.slice(idIndex + 1)];
+            this.rerender();
+          }
+        }
+      })
+      .catch(() => {
+        this.shake();
+        this._element.querySelectorAll(`.film-details__comment-delete`).forEach((it) => {
+          it.textContent = `Delete`;
+        });
+      });
     }
   }
 
@@ -159,5 +195,14 @@ export default class CommentsComponent extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  shake() {
+    this._element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+      this._element.querySelector(`.film-details__comment-input`).style = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }

@@ -6,6 +6,7 @@ import ProfileComponent from "../components/profile";
 import StatisticsSectionComponent from "../components/statistics-section";
 import StatisticsComponent from "../components/statistics";
 import FilterController from "./filter.js";
+// import NoFilmsComponent from "../components/no-films";
 
 
 import {render, remove, RenderPosition} from "../utils/render.js";
@@ -157,7 +158,7 @@ export default class PageController {
   _renderFilms(filmsListElement, filmsArray) {
     return filmsArray.map((film) => {
 
-      const filmController = new FilmController(filmsListElement, this._onDataChange, this._onViewChange, this._filmsModel.getFilms());
+      const filmController = new FilmController(filmsListElement, this._onDataChange, this._onViewChange, this._filmsModel.getFilms(), this._api);
       filmController.render(film);
       return filmController;
     });
