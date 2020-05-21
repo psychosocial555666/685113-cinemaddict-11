@@ -29,7 +29,7 @@ export default class Sort extends AbstractSmartComponent {
     return createSortTemplate();
   }
 
-  getSortType() {
+  getType() {
     return this._currenSortType;
   }
 

@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-export const createLoadingTemplate = () => {
+const createLoadingTemplate = () => {
   return (
     `<div>
     <nav class="main-navigation">

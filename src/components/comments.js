@@ -7,11 +7,7 @@ const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const createCommentsTemplate = (film) => {
   const commentItems = film.commentsAll.map((it) => createCommentItem(it.smile, it.author, it.text, it.date, it.id)).join(`\n`);
-  let emotionImage = ``;
-
-  if (film.emotion) {
-    emotionImage = createEmotionMarkup(film.emotion);
-  }
+  const emotionImage = film.emotion ? createEmotionMarkup(film.emotion) : ``;
 
   return `<section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
@@ -96,7 +92,11 @@ export default class CommentsComponent extends AbstractSmartComponent {
     this.shake = this.shake.bind(this);
   }
 
-  getComments() {
+  getTemplate() {
+    return createCommentsTemplate(this._film);
+  }
+
+  getItems() {
     return this._initialized ? Promise.resolve() : new Promise((res) => {
       this._api.getComments(this._film .id).then((data) => {
         this._film.commentsAll = data;
@@ -107,35 +107,21 @@ export default class CommentsComponent extends AbstractSmartComponent {
     });
   }
 
-  recoveryListeners() {
-    this._subscribeOnEvents();
+  rerender() {
+    super.rerender();
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-    const form = element.querySelector(`.film-details__new-comment`);
+  shake() {
+    this._element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
-    element.querySelectorAll(`.film-details__comment-delete`).forEach((it) => {
-      it.addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        evt.target.textContent = `Deleting...`;
-        const id = evt.target.closest(`.film-details__comment`).dataset.id;
-        this._onDataChange({id}, null);
-      });
-    });
+    setTimeout(() => {
+      this._element.style.animation = ``;
+      this._element.querySelector(`.film-details__comment-input`).style = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 
-    form.addEventListener(`change`, (evt) => {
-      if (evt.target.tagName === `INPUT`) {
-        form.querySelector(`.film-details__add-emoji-label`)
-           .innerHTML = `<img src="./images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji">`;
-      }
-    }, false);
-
-    form.addEventListener(`keydown`, (evt) => {
-      if ((evt.ctrlKey || evt.metaKey) && evt.code === `Enter`) {
-        this._onDataChange(null, new FormData(this._element.closest(`.film-details__inner`)));
-      }
-    });
+  recoveryListeners() {
+    this._subscribeOnEvents();
   }
 
   _onDataChange(oldData, newData) {
@@ -196,20 +182,30 @@ export default class CommentsComponent extends AbstractSmartComponent {
     }
   }
 
-  getTemplate() {
-    return createCommentsTemplate(this._film);
-  }
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    const form = element.querySelector(`.film-details__new-comment`);
 
-  rerender() {
-    super.rerender();
-  }
+    element.querySelectorAll(`.film-details__comment-delete`).forEach((it) => {
+      it.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        evt.target.textContent = `Deleting...`;
+        const id = evt.target.closest(`.film-details__comment`).dataset.id;
+        this._onDataChange({id}, null);
+      });
+    });
 
-  shake() {
-    this._element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    form.addEventListener(`change`, (evt) => {
+      if (evt.target.tagName === `INPUT`) {
+        form.querySelector(`.film-details__add-emoji-label`)
+           .innerHTML = `<img src="./images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji">`;
+      }
+    }, false);
 
-    setTimeout(() => {
-      this._element.style.animation = ``;
-      this._element.querySelector(`.film-details__comment-input`).style = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
+    form.addEventListener(`keydown`, (evt) => {
+      if ((evt.ctrlKey || evt.metaKey) && evt.code === `Enter`) {
+        this._onDataChange(null, new FormData(this._element.closest(`.film-details__inner`)));
+      }
+    });
   }
 }

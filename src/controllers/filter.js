@@ -33,28 +33,6 @@ export default class FilterController {
     this._filmsModel.setDataChangeHandler(this._onDataChange);
   }
 
-  _updateScreen(screen) {
-    if (screen === this._currentScreen) {
-      return;
-    }
-    switch (screen) {
-      case Screens.STATISTICS:
-        this._statisticsSectionComponent.show();
-        this._pageController.hide();
-        document.querySelectorAll(`.main-navigation__item`).forEach((it) => {
-          it.classList.remove(`main-navigation__item--active`);
-        });
-        document.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
-        break;
-      case Screens.FILMS:
-        this._statisticsSectionComponent.hide();
-        this._pageController.show();
-        document.querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
-        break;
-    }
-    this._currentScreen = screen;
-  }
-
   render() {
     const container = this._container;
     const allfilms = this._filmsModel.getFilmsAll();
@@ -75,21 +53,6 @@ export default class FilterController {
     } else {
       render(container, this._filterComponent.getElement(), RenderPosition.AFTERBEGIN);
     }
-  }
-
-  _onStatChange() {
-    this._updateScreen(Screens.STATISTICS);
-  }
-
-  _onFilterChange(filterType) {
-    this._updateScreen(Screens.FILMS);
-    this._filmsModel.setFilter(filterType);
-    this._activeFilterType = filterType;
-    this.render();
-  }
-
-  _onDataChange() {
-    this.render();
   }
 
   destroy() {
@@ -121,5 +84,42 @@ export default class FilterController {
       });
     });
     this._filtersClickHandler = handler;
+  }
+
+  _onStatChange() {
+    this._updateScreen(Screens.STATISTICS);
+  }
+
+  _onFilterChange(filterType) {
+    this._updateScreen(Screens.FILMS);
+    this._filmsModel.setFilter(filterType);
+    this._activeFilterType = filterType;
+    this.render();
+  }
+
+  _onDataChange() {
+    this.render();
+  }
+
+  _updateScreen(screen) {
+    if (screen === this._currentScreen) {
+      return;
+    }
+    switch (screen) {
+      case Screens.STATISTICS:
+        this._statisticsSectionComponent.show();
+        this._pageController.hide();
+        document.querySelectorAll(`.main-navigation__item`).forEach((it) => {
+          it.classList.remove(`main-navigation__item--active`);
+        });
+        document.querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
+        break;
+      case Screens.FILMS:
+        this._statisticsSectionComponent.hide();
+        this._pageController.show();
+        document.querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
+        break;
+    }
+    this._currentScreen = screen;
   }
 }

@@ -6,11 +6,11 @@ const FUN_QUANTITY = 20;
 
 const transformTimeFormat = (filmTime) => {
   if (filmTime) {
-    const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
+    const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`h[h] mm[m]`);
     return t;
-  } else {
-    return ``
   }
+
+  return ``;
 };
 
 const getRandomDate = (from, to) => {
@@ -49,7 +49,7 @@ const getArrayFromText = (text) => {
 };
 
 const getFavoriteGenre = (arr) => {
-  let genres = arr
+  const genres = arr
       .filter((movie) => movie.isInFavorites)
       .map(({genre}) => genre)
       .flat()
@@ -57,13 +57,13 @@ const getFavoriteGenre = (arr) => {
         obj[genre] = obj[genre] ? ++obj[genre] : 1;
         return obj;
       }, {});
-      if (Object.keys(genres).length > 0) {
-        const arrGenres = Object.entries(genres).sort((a, b) => b[1] - a[1]);
-        const maxGenre = arrGenres[0][1];
-        return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
-      } else {
-        return ``
-      }
+  if (Object.keys(genres).length > 0) {
+    const arrGenres = Object.entries(genres).sort((a, b) => b[1] - a[1]);
+    const maxGenre = arrGenres[0][1];
+    return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
+  }
+  return ``;
+
 };
 
 const getUserRating = (arr) => {
@@ -80,14 +80,14 @@ const getUserRating = (arr) => {
 };
 
 const getGenreStatistics = (arr) => {
-  let genres = arr
+  const genres = arr
       .filter((movie) => movie.isInHistory)
       .map(({genre}) => genre)
       .flat();
 
-  return genres.reduce((acc, rec, index) => {
-    return (typeof acc[rec] !== 'undefined') ? { ...acc, [rec]: acc[rec] + 1 } : { ...acc, [rec]: 1 }
-  }, {})
+  return genres.reduce((acc, rec) => {
+    return (typeof acc[rec] !== `undefined`) ? Object.assign(acc, {[rec]: acc[rec] + 1}) : Object.assign(acc, {[rec]: 1});
+  }, {});
 };
 
 export {transformTimeFormat, getFavoriteGenre, getUserRating, getRandomDate, getRandomArrayItem,

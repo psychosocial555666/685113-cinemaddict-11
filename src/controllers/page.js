@@ -250,7 +250,7 @@ export default class PageController {
 
     this._currentFilmsCount = this._currentFilmsCount + SHOWING_CARDS_ON_BUTTON_CLICK;
 
-    const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), prevFilmsCount, this._currentFilmsCount);
+    const sortedFilms = getSortedFilms(films, this._sortComponent.getType(), prevFilmsCount, this._currentFilmsCount);
 
     this._showedFilmControllers = this._showedFilmControllers.concat(this._renderFilms(this._filmsListContaner, sortedFilms));
 

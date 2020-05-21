@@ -27,7 +27,7 @@ const createPopupTemplate = (film) => {
   const historyInput = createCheckboxMarkup(`watched`, `Allready watched`, !film.isInHistory);
   const favoritesInput = createCheckboxMarkup(`favorite`, `Add to favorites`, !film.isInFavorites);
 
-  const genreItems = genre.map((it) => createGenreItem(it)).join(`\n`);
+  const genreItems = genre.length > 0 ? genre.map((it) => createGenreItem(it)).join(`\n`) : ``;
 
   return (
     `<section class="film-details">
@@ -129,7 +129,7 @@ export default class Popup extends AbstractSmartComponent {
     return createPopupTemplate(this._film);
   }
 
-  getPopElement() {
+  getFrameElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
@@ -137,8 +137,8 @@ export default class Popup extends AbstractSmartComponent {
   }
 
   getElement() {
-    this.getPopElement();
-    this._comments.getComments()
+    this.getFrameElement();
+    this._comments.getItems()
       .then(() => render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN))
       .then(() => {
         if (isOnline() === false) {
@@ -150,6 +150,12 @@ export default class Popup extends AbstractSmartComponent {
     return this._element;
   }
 
+  setCloseButtonClick(handler) {
+    this.getFrameElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, handler);
+    this._closeButtonHandler = handler;
+  }
+
   recoveryListeners() {
     this._subscribeOnEvents();
     this.setCloseButtonClick(this._closeButtonHandler);
@@ -158,7 +164,7 @@ export default class Popup extends AbstractSmartComponent {
 
 
   _subscribeOnEvents() {
-    const element = this.getPopElement();
+    const element = this.getFrameElement();
 
     element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, () => {
       this._isInWatchlist = !this._isInWatchlist;
@@ -169,11 +175,5 @@ export default class Popup extends AbstractSmartComponent {
     element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
       this._isInFavorites = !this._isInFavorites;
     });
-  }
-
-  setCloseButtonClick(handler) {
-    this.getPopElement().querySelector(`.film-details__close-btn`)
-    .addEventListener(`click`, handler);
-    this._closeButtonHandler = handler;
   }
 }

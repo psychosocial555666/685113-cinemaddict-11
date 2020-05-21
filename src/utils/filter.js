@@ -1,18 +1,18 @@
 import {FilterType} from "../controllers/filter.js";
 
-export const getWatchlistFilms = (films) => {
+const getWatchlistFilms = (films) => {
   return films.filter((film) => film.isInWatchlist);
 };
 
-export const getHistoryFilms = (films) => {
+const getHistoryFilms = (films) => {
   return films.filter((film) => film.isInHistory);
 };
 
-export const getFavoriteFilms = (films) => {
+const getFavoriteFilms = (films) => {
   return films.filter((film) => film.isInFavorites);
 };
 
-export const getfilmsByFilter = (films, filterType) => {
+const getfilmsByFilter = (films, filterType) => {
 
   switch (filterType) {
     case FilterType.ALL:
@@ -27,3 +27,5 @@ export const getfilmsByFilter = (films, filterType) => {
 
   return films;
 };
+
+export {getWatchlistFilms, getHistoryFilms, getFavoriteFilms, getfilmsByFilter};

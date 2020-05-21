@@ -29,34 +29,12 @@ export default class FilmController {
     this._closePopup = this._closePopup.bind(this);
   }
 
-  _openPopup() {
-    this._onViewChange();
-    bodyContainer.appendChild(this._popupComponent.getElement());
-    this._mode = Mode.EDIT;
-  }
-
-  _closePopup(film) {
-
-    const newFilm = FilmModel.clone(film);
-    newFilm.isInHistory = this._popupComponent._isInHistory;
-    newFilm.isInFavorites = this._popupComponent._isInFavorites;
-    newFilm.isInWatchlist = this._popupComponent._isInWatchlist;
-
-    this._onDataChange(film, newFilm);
-    bodyContainer.removeChild(this._popupComponent.getElement());
-    this._mode = Mode.DEFAULT;
-  }
-
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
       bodyContainer.removeChild(this._popupComponent.getElement());
       this._mode = Mode.DEFAULT;
       this._popupComponent.removeElement();
     }
-  }
-
-  destroy() {
-    remove(this._filmComponent);
   }
 
   render(film) {
@@ -125,5 +103,27 @@ export default class FilmController {
     } else {
       render(this._container, this._filmComponent .getElement());
     }
+  }
+
+  destroy() {
+    remove(this._filmComponent);
+  }
+
+  _openPopup() {
+    this._onViewChange();
+    bodyContainer.appendChild(this._popupComponent.getElement());
+    this._mode = Mode.EDIT;
+  }
+
+  _closePopup(film) {
+
+    const newFilm = FilmModel.clone(film);
+    newFilm.isInHistory = this._popupComponent._isInHistory;
+    newFilm.isInFavorites = this._popupComponent._isInFavorites;
+    newFilm.isInWatchlist = this._popupComponent._isInWatchlist;
+
+    this._onDataChange(film, newFilm);
+    bodyContainer.removeChild(this._popupComponent.getElement());
+    this._mode = Mode.DEFAULT;
   }
 }
