@@ -49,7 +49,9 @@ export default class FilmController {
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._closePopup();
+      bodyContainer.removeChild(this._popupComponent.getElement());
+      this._mode = Mode.DEFAULT;
+      this._popupComponent.removeElement();
     }
   }
 
@@ -73,17 +75,17 @@ export default class FilmController {
     };
 
     this._filmComponent.setPosterClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setTitleClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setCommentsClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 

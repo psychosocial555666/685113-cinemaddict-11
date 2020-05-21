@@ -35,14 +35,13 @@ apiWithProvider.getFilms()
     }
   });
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`)
-//       .then(() => {
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+      .then(() => {
 
-//       }).catch(() => {
-
-//       });
-// });
+      }).catch(() => {
+      });
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);

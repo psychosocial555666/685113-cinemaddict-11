@@ -9,7 +9,7 @@ const transformTimeFormat = (filmTime) => {
     const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
     return t;
   } else {
-    return `0h 0m`
+    return ``
   }
 };
 
@@ -62,7 +62,7 @@ const getFavoriteGenre = (arr) => {
         const maxGenre = arrGenres[0][1];
         return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
       } else {
-        return `None`
+        return ``
       }
 };
 

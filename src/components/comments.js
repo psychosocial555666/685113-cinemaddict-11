@@ -14,7 +14,7 @@ const createCommentsTemplate = (film) => {
   }
 
   return `<section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.commentsAll.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
 
             <ul class="film-details__comments-list">
               ${commentItems}
@@ -57,21 +57,28 @@ const createCommentsTemplate = (film) => {
 
 
 const createCommentItem = (smile, author, text, date, id) => {
-  return (
-    `<li class="film-details__comment" data-id = ${id} >
-          <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${smile}.png" width="55" height="55" alt="emoji-${smile}">
-          </span>
-        <div>
-          <p class="film-details__comment-text">${text}</p>
-          <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${moment(date).calendar(null, {sameElse: `YYYY/MM/DD hh:mm`})}</span>
-            <button class="film-details__comment-delete">Delete</button>
-          </p>
-        </div>
-      </li>`
-  );
+  if (smile === undefined || author === undefined || text === undefined || date === undefined || id === undefined) {
+    return ``;
+  } else {
+    return (
+      `<li class="film-details__comment" data-id = ${id} >
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${smile}.png" width="55" height="55" alt="emoji-${smile}">
+            </span>
+          <div>
+            <p class="film-details__comment-text">${text}</p>
+            <p class="film-details__comment-info">
+              <span class="film-details__comment-author">${author}</span>
+              <span class="film-details__comment-day">${moment(date).calendar(null, {
+        sameDay: `[${moment(date).fromNow()}]`,
+        sameElse: `YYYY/MM/DD hh:mm`
+      })}</span>
+              <button class="film-details__comment-delete">Delete</button>
+            </p>
+          </div>
+        </li>`
+    );
+  }
 };
 
 const createEmotionMarkup = (emotion) => {

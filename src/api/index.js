@@ -1,7 +1,7 @@
 import Film from "../models/film.js";
 import Comments from "../models/comments";
 
-const AUTHORIZATION = `Basic eo0w666ik66689a`;
+const AUTHORIZATION = `Basic eo0w666wefik6f6689a`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const Method = {
