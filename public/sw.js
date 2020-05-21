@@ -26,13 +26,13 @@ self.addEventListener(`install`, (evt) => {
             `/images/icons/icon-watched.svg`,
             `/images/icons/icon-watchlist-active.svg`,
             `/images/icons/icon-watchlist.svg`,
-            `public/images/posters/made-for-each-other.png`,
-            `public/images/posters/popeye-meets-sinbad.png`,
-            `public/images/posters/sagebrush-trail.jpg`,
-            `public/images/posters/the-dance-of-life.jpg`,
-            `public/images/posters/santa-claus-conquers-the-martians.jpg`,
-            `public/images/posters/the-great-flamarion.jpg`,
-            `public/images/posters/the-man-with-the-golden-arm.jpg`,
+            `/images/posters/made-for-each-other.png`,
+            `/images/posters/popeye-meets-sinbad.png`,
+            `/images/posters/sagebrush-trail.jpg`,
+            `/images/posters/the-dance-of-life.jpg`,
+            `/images/posters/santa-claus-conquers-the-martians.jpg`,
+            `/images/posters/the-great-flamarion.jpg`,
+            `/images/posters/the-man-with-the-golden-arm.jpg`,
           ]);
         })
   );

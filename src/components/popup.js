@@ -3,6 +3,10 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 import {createElement, render, RenderPosition} from "../utils/render";
 import CommentsComponent from "./comments";
 
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 const createGenreItem = (genre) => {
   return (
     `<span class="film-details__genre">${genre}</span>`
@@ -135,7 +139,14 @@ export default class Popup extends AbstractSmartComponent {
   getElement() {
     this.getPopElement();
     this._comments.getComments()
-      .then(() => render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN));
+      .then(() => render(this._element.querySelector(`.form-details__bottom-container`), this._comments.getElement(), RenderPosition.AFTERBEGIN))
+      .then(() => {
+        if (isOnline() === false) {
+          document.querySelector(`.film-details__comment-input`).setAttribute(`disabled`, `disabled`);
+          document.querySelectorAll(`.film-details__emoji-item`).forEach((it) => it.setAttribute(`disabled`, `disabled`));
+          document.querySelectorAll(`.film-details__comment-delete`).forEach((it) => it.setAttribute(`disabled`, `disabled`));
+        }
+      });
     return this._element;
   }
 

@@ -49,18 +49,18 @@ export default class FilmController {
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._closePopup();
+      bodyContainer.removeChild(this._popupComponent.getElement());
+      this._mode = Mode.DEFAULT;
+      this._popupComponent.removeElement();
     }
   }
 
   destroy() {
-    // remove(this._popupComponent);
     remove(this._filmComponent);
   }
 
   render(film) {
     const oldFilmComponent = this._filmComponent;
-    // const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
     this._popupComponent = new PopupComponent(film, this._filmsModel, this._api);
@@ -74,31 +74,25 @@ export default class FilmController {
       }
     };
 
-    // Обработчики открытия попапа
-
     this._filmComponent.setPosterClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setTitleClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setCommentsClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
-
-    // Закрытие попапа
 
     this._popupComponent.setCloseButtonClick(() => {
       this._closePopup(film);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-
-    // Обработчики клика по кнопкам добавления категорий
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
