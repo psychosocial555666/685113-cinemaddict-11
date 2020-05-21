@@ -1,6 +1,12 @@
 import {transformTimeFormat} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
+const DESCRIPTIONMAXLENGTH = 140;
+
+const checkDescriptionLength = (str, maxLength) => {
+  return (str.length > maxLength) ? str.slice(0, maxLength - 1) + `…` : str;
+};
+
 const createButtonMarkup = (name, title, isActive = false) => {
   return (
     `<button class="film-card__controls-item button film-card__controls-item--${name} ${isActive ? `` : `film-card__controls-item--active`}">${title}</button>`
@@ -10,6 +16,7 @@ const createButtonMarkup = (name, title, isActive = false) => {
 const createFilmCardTemplate = (film) => {
   const {title, rating, year, duration, genre, url, description, comments, isInWatchlist, isInHistory, isInFavorites} = film;
 
+  const checkedDescription = checkDescriptionLength(description, DESCRIPTIONMAXLENGTH);
   const watchlistButton = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !isInWatchlist);
   const historyButton = createButtonMarkup(`mark-as-watched`, `Mark as watched`, !isInHistory);
   const favoritesButton = createButtonMarkup(`favorite`, `Mark as favorite`, !isInFavorites);
@@ -24,7 +31,7 @@ const createFilmCardTemplate = (film) => {
             <span class="film-card__genre">${genre[0]}</span>
           </p>
           <img src="${url}" alt="" class="film-card__poster">
-          <p class="film-card__description">${description}</p>
+          <p class="film-card__description">${checkedDescription}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}

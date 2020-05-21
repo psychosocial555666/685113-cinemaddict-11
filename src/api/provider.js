@@ -74,15 +74,17 @@ export default class Provider {
   createComment(comment, id) {
     if (isOnline()) {
       return this._api.createComment(comment, id);
+    } else {
+      return Promise.reject(`Comment was not added`);
     }
-    return Promise.reject(`Comment was not added`);
   }
 
   deleteComment(id) {
     if (isOnline()) {
       return this._api.deleteComment(id);
+    } else {
+      return Promise.reject(`Comment was not deleted`);
     }
-    return Promise.reject(`Comment was not deleted`);
   }
 
   sync() {
