@@ -1,7 +1,7 @@
-import Film from "./models/film.js";
-import Comments from "./models/comments";
+import Film from "../models/film.js";
+import Comments from "../models/comments";
 
-const AUTHORIZATION = `Basic eo0w666ik66689a`;
+const AUTHORIZATION = `Basic eo0w666wefik6f6689a`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const Method = {
@@ -61,7 +61,20 @@ const API = class {
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
+      .then((data) => {
+        return data.comments[data.comments.length - 1];
+      })
       .then(Comments.parseComment);
+  }
+
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

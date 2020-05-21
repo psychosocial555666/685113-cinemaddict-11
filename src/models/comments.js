@@ -25,6 +25,6 @@ export default class Comment {
   }
 
   static clone(comment) {
-    return new Comment(comment);
+    return new Comment(comment.toRAW());
   }
 }

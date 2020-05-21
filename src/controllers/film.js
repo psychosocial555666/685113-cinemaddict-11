@@ -14,11 +14,12 @@ const Mode = {
 const bodyContainer = document.querySelector(`body`);
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, filmsModel) {
+  constructor(container, onDataChange, onViewChange, filmsModel, api) {
     this._container = container;
     this._filmComponent = null;
     this._popupComponent = null;
     this._filmsModel = filmsModel;
+    this._api = api;
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -48,21 +49,21 @@ export default class FilmController {
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._closePopup();
+      bodyContainer.removeChild(this._popupComponent.getElement());
+      this._mode = Mode.DEFAULT;
+      this._popupComponent.removeElement();
     }
   }
 
   destroy() {
-    // remove(this._popupComponent);
     remove(this._filmComponent);
   }
 
   render(film) {
     const oldFilmComponent = this._filmComponent;
-    // const oldPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmComponent(film);
-    this._popupComponent = new PopupComponent(film, this._filmsModel);
+    this._popupComponent = new PopupComponent(film, this._filmsModel, this._api);
 
     const onEscKeyDown = (evt) => {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
@@ -73,31 +74,25 @@ export default class FilmController {
       }
     };
 
-    // Обработчики открытия попапа
-
     this._filmComponent.setPosterClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setTitleClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._filmComponent.setCommentsClickHandler(() => {
-      this._openPopup();
+      this._openPopup(film);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
-
-    // Закрытие попапа
 
     this._popupComponent.setCloseButtonClick(() => {
       this._closePopup(film);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-
-    // Обработчики клика по кнопкам добавления категорий
 
     this._filmComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();

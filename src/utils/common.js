@@ -1,14 +1,16 @@
 
 import moment from "moment";
 
+const NOVICE_QUANTITY = 10;
+const FUN_QUANTITY = 20;
+
 const transformTimeFormat = (filmTime) => {
   if (filmTime) {
     const t = moment.utc().startOf(`day`).add(filmTime, `minutes`).format(`hh[h] mm[m]`);
     return t;
   } else {
-    return `0h 0m`
+    return ``
   }
-  
 };
 
 const getRandomDate = (from, to) => {
@@ -60,18 +62,18 @@ const getFavoriteGenre = (arr) => {
         const maxGenre = arrGenres[0][1];
         return arrGenres.filter((genre) => genre[1] === maxGenre).map((genre) => genre[0]).join(`, `);
       } else {
-        return `None`
+        return ``
       }
 };
 
 const getUserRating = (arr) => {
   const watchedMoviesQuantity = arr.length;
   let userRating = ``;
-  if (watchedMoviesQuantity > 0 && watchedMoviesQuantity <= 10) {
+  if (watchedMoviesQuantity > 0 && watchedMoviesQuantity <= NOVICE_QUANTITY) {
     userRating = `Novice`;
-  } else if (watchedMoviesQuantity > 10 && watchedMoviesQuantity <= 20) {
+  } else if (watchedMoviesQuantity > NOVICE_QUANTITY && watchedMoviesQuantity <= FUN_QUANTITY) {
     userRating = `Fan`;
-  } else if (watchedMoviesQuantity > 20) {
+  } else if (watchedMoviesQuantity > FUN_QUANTITY) {
     userRating = `Movie Buff`;
   }
   return userRating;
