@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-export const createStatisticsTemplate = (allMovies) => {
+const createStatisticsTemplate = (allMovies) => {
   return (
     `<p>${allMovies} movies inside</p>`
   );

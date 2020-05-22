@@ -2,7 +2,7 @@ import FilterComponent from "../components/main-nav.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
 import {getfilmsByFilter} from "../utils/filter.js";
 
-export const FilterType = {
+const FilterType = {
   ALL: `All movies`,
   WATHCLIST: `Watchlis`,
   HISTORY: `History`,
@@ -123,3 +123,5 @@ export default class FilterController {
     this._currentScreen = screen;
   }
 }
+
+export {FilterType};

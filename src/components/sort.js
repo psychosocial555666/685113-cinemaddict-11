@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-export const SortType = {
+const SortType = {
   DATE: `date`,
   RATING: `rating`,
   DEFAULT: `default`,
@@ -68,3 +68,6 @@ export default class Sort extends AbstractSmartComponent {
     });
   }
 }
+
+export {SortType};
+
